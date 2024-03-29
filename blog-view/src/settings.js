@@ -1,11 +1,13 @@
 module.exports = {
+
 	/**
 	 * @type {string}
 	 * @description 首页三张背景图
 	 */
-	bg1: 'https://cdn.naccl.top/blog/img/bg1.jpg',
-	bg2: 'https://cdn.naccl.top/blog/img/bg2.jpg',
-	bg3: 'https://cdn.naccl.top/blog/img/bg3.jpg',
+	bg1: 'https://chaobk-repo.oss-cn-shenzhen.aliyuncs.com/pic/136.jpg',
+	bg2: 'https://chaobk-repo.oss-cn-shenzhen.aliyuncs.com/pic/13.jpg',
+	bg3: 'https://chaobk-repo.oss-cn-shenzhen.aliyuncs.com/pic/119.jpg',
+
 
 	/**
 	 * @type {string}
