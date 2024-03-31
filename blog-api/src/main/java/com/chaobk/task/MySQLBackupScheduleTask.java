@@ -1,13 +1,13 @@
 package com.chaobk.task;
 
 import com.chaobk.util.FileUtils;
+import com.chaobk.util.MailUtils;
 import com.chaobk.util.upload.UploadUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -15,18 +15,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Slf4j
-@Configuration
+@Component
 @RequiredArgsConstructor
 public class MySQLBackupScheduleTask {
 
     private final DataSourceProperties dataSourceProperties;
     private final UploadUtils uploadUtils;
+    private final MailUtils mailUtils;
 
     /**
      * 备份文件的存放目录
      */
     @Value("${mysql.data.backup-path}")
     private String backupDir;
+
 
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
 
@@ -37,10 +39,10 @@ public class MySQLBackupScheduleTask {
      * 2.备份文件压缩
      * 3.压缩文件上传到OSS
      * 4.残留文件清理
-     * 5.备份结果的邮件通知 //TODO
-     * 6.适应化改造，改成类似NBlog中的定时任务 //TODO
+     * 5.备份结果的邮件通知
+     * 6.适应化改造，改成类似NBlog中的定时任务
      */
-    @Scheduled(cron = "0 0 4 * * 1")
+    //@Scheduled(cron = "0 0 4 * * 1")
     public void backUpMySQLData() {
         checkDir(backupDir);
         String dateFormat = simpleDateFormat.format(new Date());
@@ -48,6 +50,7 @@ public class MySQLBackupScheduleTask {
         String compressedFileName = fileName + ".zip";
         String dataPath = backupDir + File.separator + fileName;
         String compressedFilePath = backupDir + File.separator + compressedFileName;
+        String uploadLink = null;
         try {
             log.debug("mysql备份开始");
             // 1.mysql数据备份
@@ -55,13 +58,17 @@ public class MySQLBackupScheduleTask {
             // 2.文件压缩
             FileUtils.compressFile(dataPath, compressedFilePath);
             // 3.上传到OSS
-            String uploadLink = UploadUtils.upload(compressedFilePath);
+            uploadLink = UploadUtils.upload(compressedFilePath);
             log.info("备份文件({})已上传至OSS({})", compressedFilePath, uploadLink);
             // 4.清除残留文件
             FileUtils.delFileByPath(dataPath, compressedFilePath);
+
         } catch (IOException e) {
             log.error("mysql数据备份失败");
             log.error(e.getMessage());
+        } finally {
+            // 5.备份结果的邮件通知
+            mailUtils.sendSimpleMailToMyself("MySQL数据备份", String.format("备份数据链接为(若为null说明备份失败，请检查日志)：%s ", uploadLink));
         }
     }
 

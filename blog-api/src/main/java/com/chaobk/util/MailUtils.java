@@ -44,6 +44,11 @@ public class MailUtils {
 	}
 
 	@Async
+	public void sendSimpleMailToMyself(String subject, String content) {
+		sendSimpleMail(mailProperties.getUsername(), subject, content);
+	}
+
+	@Async
 	public void sendHtmlTemplateMail(Map<String, Object> map, String toAccount, String subject, String template) {
 		try {
 			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
