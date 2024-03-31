@@ -210,6 +210,8 @@ CREATE TABLE `schedule_job`  (
 -- ----------------------------
 INSERT INTO `schedule_job` VALUES (1, 'redisSyncScheduleTask', 'syncBlogViewsToDatabase', '', '0 0 1 * * ?', 1, '每天凌晨一点，从Redis将博客浏览量同步到数据库', '2020-11-17 23:45:42');
 INSERT INTO `schedule_job` VALUES (2, 'visitorSyncScheduleTask', 'syncVisitInfoToDatabase', '', '0 0 0 * * ?', 1, '清空当天Redis访客标识，记录当天的PV和UV，更新当天所有访客的PV和最后访问时间，更新城市新增访客UV数', '2021-02-05 08:14:28');
+INSERT INTO `cblog`.`schedule_job` (`job_id`, `bean_name`, `method_name`, `params`, `cron`, `status`, `remark`, `create_time`) VALUES (3, 'mySQLBackupScheduleTask', 'backUpMySQLData', '', '0 0 4 ? * 1', 1, '每周日凌晨四点，备份MySQL数据', '2024-03-31 18:03:41');
+
 
 -- ----------------------------
 -- Table structure for schedule_job_log
