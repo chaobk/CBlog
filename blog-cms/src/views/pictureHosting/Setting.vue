@@ -77,7 +77,6 @@
         <el-button type="primary" size="medium" icon="el-icon-check" :disabled="!isAliyunSave"
                    @click="saveAliyun(true)">保存配置
         </el-button>
-        <el-button type="info" size="medium" icon="el-icon-close" @click="saveUpyun(false)">清除配置</el-button>
       </el-form>
     </el-card>
   </div>
@@ -96,12 +95,6 @@ export default {
       },
       isGithubSave: false,
       hintShow: false,
-      upyunConfig: {
-        username: '',
-        password: '',
-        bucketName: '',
-        domain: ''
-      },
       txyunConfig: {
         secretId: '',
         secretKey: '',
@@ -118,9 +111,6 @@ export default {
     }
   },
   computed: {
-    isUpyunSave() {
-      return this.upyunConfig.username && this.upyunConfig.password && this.upyunConfig.bucketName && this.upyunConfig.domain
-    },
     isTxyunSave() {
       return this.txyunConfig.secretId && this.txyunConfig.secretKey && this.txyunConfig.bucketName && this.txyunConfig.region && this.txyunConfig.domain
     },
@@ -136,11 +126,6 @@ export default {
       this.isGithubSave = true
     } else {
       this.githubUserInfo = {login: '未配置'}
-    }
-
-    const upyunConfig = localStorage.getItem('upyunConfig')
-    if (upyunConfig) {
-      this.upyunConfig = JSON.parse(upyunConfig)
     }
 
     const txyunConfig = localStorage.getItem('txyunConfig')
@@ -179,17 +164,6 @@ export default {
       } else {
         localStorage.removeItem('githubToken')
         localStorage.removeItem('githubUserInfo')
-        this.msgSuccess('清除成功')
-      }
-    }
-    ,
-    saveUpyun(save) {
-      if (save) {
-        localStorage.setItem('upyunToken', btoa(`${this.upyunConfig.username}:${this.upyunConfig.password}`))
-        localStorage.setItem('upyunConfig', JSON.stringify(this.upyunConfig))
-        this.msgSuccess('保存成功')
-      } else {
-        localStorage.removeItem('upyunConfig')
         this.msgSuccess('清除成功')
       }
     }
