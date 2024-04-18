@@ -1,5 +1,8 @@
 package com.chaobk.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.chaobk.constant.RedisKeyConstants;
 import com.chaobk.entity.About;
 import com.chaobk.exception.PersistenceException;
@@ -7,9 +10,6 @@ import com.chaobk.mapper.AboutMapper;
 import com.chaobk.service.AboutService;
 import com.chaobk.service.RedisService;
 import com.chaobk.util.markdown.MarkdownUtils;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +22,11 @@ import java.util.Set;
  * @Date: 2020-08-31
  */
 @Service
-@RequiredArgsConstructor
 public class AboutServiceImpl implements AboutService {
-	private final AboutMapper aboutMapper;
-	private final RedisService redisService;
+	@Autowired
+	AboutMapper aboutMapper;
+	@Autowired
+	RedisService redisService;
 
 	@Override
 	public Map<String, String> getAboutInfo() {
@@ -34,7 +35,7 @@ public class AboutServiceImpl implements AboutService {
 		if (aboutInfoMapFromRedis != null) {
 			return aboutInfoMapFromRedis;
 		}
-		List<About> abouts = aboutMapper.selectList(null);
+		List<About> abouts = aboutMapper.getList();
 		Map<String, String> aboutInfoMap = new HashMap<>(16);
 		for (About about : abouts) {
 			if ("content".equals(about.getNameEn())) {
@@ -48,7 +49,7 @@ public class AboutServiceImpl implements AboutService {
 
 	@Override
 	public Map<String, String> getAboutSetting() {
-		List<About> abouts = aboutMapper.selectList(null);
+		List<About> abouts = aboutMapper.getList();
 		Map<String, String> map = new HashMap<>(16);
 		for (About about : abouts) {
 			map.put(about.getNameEn(), about.getValue());

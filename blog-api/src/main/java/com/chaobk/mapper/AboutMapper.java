@@ -1,9 +1,10 @@
 package com.chaobk.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.chaobk.entity.About;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+import com.chaobk.entity.About;
+
+import java.util.List;
 
 /**
  * @Description: 关于我持久层接口
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Repository;
  */
 @Mapper
 @Repository
-public interface AboutMapper extends BaseMapper<About> {
+public interface AboutMapper {
+	List<About> getList();
 
 	int updateAbout(String nameEn, String value);
 

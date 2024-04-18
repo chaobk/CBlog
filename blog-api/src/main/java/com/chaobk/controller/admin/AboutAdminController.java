@@ -1,12 +1,14 @@
 package com.chaobk.controller.admin;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.chaobk.annotation.OperationLogger;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.AboutService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -17,7 +19,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/admin")
-@Api(tags = "AboutAdminController - 关于我页面 后台管理")
 public class AboutAdminController {
 	@Autowired
 	AboutService aboutService;
@@ -28,7 +29,6 @@ public class AboutAdminController {
 	 * @return
 	 */
 	@GetMapping("/about")
-	@ApiOperation("获取关于我页面配置")
 	public Result about() {
 		return Result.ok("请求成功", aboutService.getAboutSetting());
 	}
