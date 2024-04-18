@@ -1,17 +1,12 @@
 package com.chaobk.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.chaobk.model.dto.Blog;
 import com.chaobk.model.dto.BlogView;
 import com.chaobk.model.dto.BlogVisibility;
+import com.chaobk.model.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-import com.chaobk.model.vo.ArchiveBlog;
-import com.chaobk.model.vo.BlogDetail;
-import com.chaobk.model.vo.BlogInfo;
-import com.chaobk.model.vo.CategoryBlogCount;
-import com.chaobk.model.vo.NewBlog;
-import com.chaobk.model.vo.RandomBlog;
-import com.chaobk.model.vo.SearchBlog;
 
 import java.util.List;
 
@@ -22,7 +17,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface BlogMapper {
+public interface BlogMapper extends BaseMapper<com.chaobk.entity.Blog> {
 	List<com.chaobk.entity.Blog> getListByTitleAndCategoryId(String title, Integer categoryId);
 
 	List<SearchBlog> getSearchBlogListByQueryAndIsPublished(String query);
