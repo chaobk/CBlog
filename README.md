@@ -26,7 +26,7 @@ NBlog效果预览地址：
 后台：[https://admin.naccl.top](https://admin.naccl.top)
 
 本项目准备部署完后逐步更改，预览地址如下：
-前台：[http://185.242.235.202:8080/](http://185.242.235.202:8080/)
+前台：[https://www.chaobk.com/](https://www.chaobk.com/)
 
 
 ## 后端
