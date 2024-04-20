@@ -37,7 +37,7 @@ public class JwtUtils {
 	 * @return
 	 */
 	public static boolean judgeTokenIsExist(String token) {
-		return token != null && !"".equals(token) && !"null".equals(token);
+		return !"".equals(token) && !"null".equals(token);
 	}
 
 	/**
