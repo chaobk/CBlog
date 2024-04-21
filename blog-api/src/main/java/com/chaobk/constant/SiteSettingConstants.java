@@ -18,4 +18,17 @@ public class SiteSettingConstants {
 	public static final String EMAIL = "email";
 	public static final String FAVORITE = "favorite";
 	public static final String ROLL_TEXT = "rollText";
+
+	// 1基础设置
+	public static final Integer TYPE_1 = 1;
+	// 2页脚徽标
+	public static final Integer TYPE_2 = 2;
+	// 3.资料卡
+	public static final Integer TYPE_3 = 3;
+	// 4.友链信息
+	public static final Integer TYPE_4 = 4;
+
+	public static final String FRIEND_CONTENT = "friendContent";
+	public static final String FRIEND_COMMENT_ENABLED = "friendCommentEnabled";
+	public static final String FRIEND_COMMENT_ENABLED_YES = "1";
 }

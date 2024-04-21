@@ -1,27 +1,25 @@
 package com.chaobk.controller;
 
+import com.chaobk.annotation.AccessLimit;
+import com.chaobk.constant.JwtConstants;
+import com.chaobk.entity.User;
 import com.chaobk.enums.CommentOpenStateEnum;
 import com.chaobk.model.dto.Comment;
 import com.chaobk.model.vo.PageComment;
 import com.chaobk.model.vo.PageResult;
 import com.chaobk.model.vo.Result;
+import com.chaobk.service.CommentService;
 import com.chaobk.service.impl.UserServiceImpl;
 import com.chaobk.util.JwtUtils;
 import com.chaobk.util.StringUtils;
 import com.chaobk.util.comment.CommentUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import com.chaobk.annotation.AccessLimit;
-import com.chaobk.constant.JwtConstants;
-import com.chaobk.entity.User;
-import com.chaobk.service.CommentService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -33,30 +31,21 @@ import java.util.Map;
  * @Date: 2020-08-15
  */
 @RestController
+@RequiredArgsConstructor
+@Api(tags = "CommentController - 评论")
 public class CommentController {
-	@Autowired
-	CommentService commentService;
-	@Autowired
-    UserServiceImpl userService;
-	@Autowired
-    CommentUtils commentUtils;
+	private final CommentService commentService;
+    private final UserServiceImpl userService;
+    private final CommentUtils commentUtils;
 
-	/**
-	 * 根据页面分页查询评论列表
-	 *
-	 * @param page     页面分类（0普通文章，1关于我...）
-	 * @param blogId   如果page==0，需要博客id参数
-	 * @param pageNum  页码
-	 * @param pageSize 每页个数
-	 * @param jwt      若文章受密码保护，需要获取访问Token
-	 * @return
-	 */
+
 	@GetMapping("/comments")
-	public Result comments(@RequestParam Integer page,
-                           @RequestParam(defaultValue = "") Long blogId,
-                           @RequestParam(defaultValue = "1") Integer pageNum,
-                           @RequestParam(defaultValue = "10") Integer pageSize,
-                           @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
+	@ApiOperation("根据博客分页查询评论列表")
+	public Result comments(@ApiParam("页面分类（0普通文章，1关于我，2友联）") @RequestParam Integer page,
+						   @ApiParam("如果page==0，需要博客id参数") @RequestParam(defaultValue = "") Long blogId,
+                           @ApiParam("页码") @RequestParam(defaultValue = "1") Integer pageNum,
+                           @ApiParam("每页个数") @RequestParam(defaultValue = "10") Integer pageSize,
+                           @ApiParam("若文章受密码保护，需要获取访问Token") @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
 		CommentOpenStateEnum openState = commentUtils.judgeCommentState(page, blogId);
 		switch (openState) {
 			case NOT_FOUND:

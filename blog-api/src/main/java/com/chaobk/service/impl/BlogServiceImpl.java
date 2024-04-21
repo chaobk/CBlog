@@ -1,29 +1,23 @@
 package com.chaobk.service.impl;
 
+import com.chaobk.constant.RedisKeyConstants;
+import com.chaobk.exception.NotFoundException;
+import com.chaobk.exception.PersistenceException;
+import com.chaobk.mapper.BlogMapper;
 import com.chaobk.model.dto.Blog;
+import com.chaobk.model.dto.BlogView;
+import com.chaobk.model.dto.BlogVisibility;
+import com.chaobk.model.vo.*;
+import com.chaobk.service.BlogService;
+import com.chaobk.service.RedisService;
+import com.chaobk.service.TagService;
 import com.chaobk.util.JacksonUtils;
+import com.chaobk.util.markdown.MarkdownUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.chaobk.constant.RedisKeyConstants;
-import com.chaobk.exception.NotFoundException;
-import com.chaobk.exception.PersistenceException;
-import com.chaobk.mapper.BlogMapper;
-import com.chaobk.model.dto.BlogView;
-import com.chaobk.model.dto.BlogVisibility;
-import com.chaobk.model.vo.ArchiveBlog;
-import com.chaobk.model.vo.BlogDetail;
-import com.chaobk.model.vo.BlogInfo;
-import com.chaobk.model.vo.NewBlog;
-import com.chaobk.model.vo.PageResult;
-import com.chaobk.model.vo.RandomBlog;
-import com.chaobk.model.vo.SearchBlog;
-import com.chaobk.service.BlogService;
-import com.chaobk.service.RedisService;
-import com.chaobk.service.TagService;
-import com.chaobk.util.markdown.MarkdownUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -77,14 +71,16 @@ public class BlogServiceImpl implements BlogService {
 	@Override
 	public List<SearchBlog> getSearchBlogListByQueryAndIsPublished(String query) {
 		List<SearchBlog> searchBlogs = blogMapper.getSearchBlogListByQueryAndIsPublished(query);
+		// 数据库的处理是不区分大小写的，那么这里的匹配串处理也应该不区分大小写，否则会出现不准确的结果
+		query = query.toUpperCase();
 		for (SearchBlog searchBlog : searchBlogs) {
-			String content = searchBlog.getContent();
+			String content = searchBlog.getContent().toUpperCase();
 			int contentLength = content.length();
 			int index = content.indexOf(query) - 10;
-			index = index < 0 ? 0 : index;
+			index = Math.max(index, 0);
 			int end = index + 21;//以关键字字符串为中心返回21个字
-			end = end > contentLength - 1 ? contentLength - 1 : end;
-			searchBlog.setContent(content.substring(index, end));
+			end = Math.min(end, contentLength - 1);
+			searchBlog.setContent(searchBlog.getContent().substring(index, end));
 		}
 		return searchBlogs;
 	}
@@ -356,11 +352,6 @@ public class BlogServiceImpl implements BlogService {
 			throw new NotFoundException("该博客不存在");
 		}
 		blog.setContent(MarkdownUtils.markdownToHtmlExtensions(blog.getContent()));
-		/**
-		 * 将浏览量设置为Redis中的最新值
-		 * 这里如果出现异常，查看第 152 行注释说明
-		 * @see BlogServiceImpl#setBlogViewsFromRedisToPageResult
-		 */
 		int view = (int) redisService.getValueByHashKey(RedisKeyConstants.BLOG_VIEWS_MAP, blog.getId());
 		blog.setViews(view);
 		return blog;

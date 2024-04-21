@@ -1,8 +1,9 @@
 package com.chaobk.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.chaobk.entity.SiteSetting;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-import com.chaobk.entity.SiteSetting;
 
 import java.util.List;
 
@@ -13,10 +14,8 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface SiteSettingMapper {
+public interface SiteSettingMapper extends BaseMapper<SiteSetting> {
 	List<SiteSetting> getList();
-
-	List<SiteSetting> getFriendInfo();
 
 	String getWebTitleSuffix();
 

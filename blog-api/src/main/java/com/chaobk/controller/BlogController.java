@@ -1,26 +1,20 @@
 package com.chaobk.controller;
 
-import com.chaobk.enums.VisitBehavior;
-import com.chaobk.model.dto.BlogPassword;
-import com.chaobk.service.impl.UserServiceImpl;
-import com.chaobk.util.JwtUtils;
-import com.chaobk.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.chaobk.annotation.VisitLogger;
 import com.chaobk.constant.JwtConstants;
 import com.chaobk.entity.User;
-import com.chaobk.model.vo.BlogDetail;
-import com.chaobk.model.vo.BlogInfo;
-import com.chaobk.model.vo.PageResult;
-import com.chaobk.model.vo.Result;
-import com.chaobk.model.vo.SearchBlog;
+import com.chaobk.enums.VisitBehavior;
+import com.chaobk.model.dto.BlogPassword;
+import com.chaobk.model.vo.*;
 import com.chaobk.service.BlogService;
+import com.chaobk.service.impl.UserServiceImpl;
+import com.chaobk.util.JwtUtils;
+import com.chaobk.util.StringUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,11 +24,11 @@ import java.util.List;
  * @Date: 2020-08-12
  */
 @RestController
+@Api(tags = "BlogController - 博客相关")
+@RequiredArgsConstructor
 public class BlogController {
-	@Autowired
-	BlogService blogService;
-	@Autowired
-    UserServiceImpl userService;
+	private final BlogService blogService;
+    private final UserServiceImpl userService;
 
 	/**
 	 * 按置顶、创建时间排序 分页查询博客简要信息列表
@@ -44,22 +38,17 @@ public class BlogController {
 	 */
 	@VisitLogger(VisitBehavior.INDEX)
 	@GetMapping("/blogs")
+	@ApiOperation("分页查询博客摘要信息列表， 按照置顶、创建时间排序")
 	public Result blogs(@RequestParam(defaultValue = "1") Integer pageNum) {
 		PageResult<BlogInfo> pageResult = blogService.getBlogInfoListByIsPublished(pageNum);
 		return Result.ok("请求成功", pageResult);
 	}
 
-	/**
-	 * 按id获取公开博客详情
-	 *
-	 * @param id  博客id
-	 * @param jwt 密码保护文章的访问Token
-	 * @return
-	 */
 	@VisitLogger(VisitBehavior.BLOG)
 	@GetMapping("/blog")
-	public Result getBlog(@RequestParam Long id,
-	                      @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
+	@ApiOperation("按id获取公开博客详情")
+	public Result getBlog(@ApiParam("博客id") @RequestParam Long id,
+	                      @ApiParam("保护文章的访问Token") @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
 		BlogDetail blog = blogService.getBlogByIdAndIsPublished(id);
 		//对密码保护的文章校验Token
 		if (!"".equals(blog.getPassword())) {
@@ -94,14 +83,10 @@ public class BlogController {
 		return Result.ok("获取成功", blog);
 	}
 
-	/**
-	 * 校验受保护文章密码是否正确，正确则返回jwt
-	 *
-	 * @param blogPassword 博客id、密码
-	 * @return
-	 */
+
 	@VisitLogger(VisitBehavior.CHECK_PASSWORD)
 	@PostMapping("/checkBlogPassword")
+	@ApiOperation("校验受保护文章密码是否正确，正确则返回jwt")
 	public Result checkBlogPassword(@RequestBody BlogPassword blogPassword) {
 		String password = blogService.getBlogPassword(blogPassword.getBlogId());
 		if (password.equals(blogPassword.getPassword())) {
@@ -113,15 +98,11 @@ public class BlogController {
 		}
 	}
 
-	/**
-	 * 按关键字根据文章内容搜索公开且无密码保护的博客文章
-	 *
-	 * @param query 关键字字符串
-	 * @return
-	 */
+
 	@VisitLogger(VisitBehavior.SEARCH)
 	@GetMapping("/searchBlog")
-	public Result searchBlog(@RequestParam String query) {
+	@ApiOperation("按关键字搜索公开且无密码保护的博客文章")
+	public Result searchBlog(@ApiParam("搜索关键字") @RequestParam String query) {
 		//校验关键字字符串合法性
 		if (StringUtils.isEmpty(query) || StringUtils.hasSpecialChar(query) || query.trim().length() > 20) {
 			return Result.error("参数错误");

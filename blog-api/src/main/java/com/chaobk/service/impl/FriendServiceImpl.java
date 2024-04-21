@@ -1,18 +1,20 @@
 package com.chaobk.service.impl;
 
-import com.chaobk.model.dto.Friend;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chaobk.constant.RedisKeyConstants;
+import com.chaobk.constant.SiteSettingConstants;
 import com.chaobk.entity.SiteSetting;
 import com.chaobk.exception.PersistenceException;
 import com.chaobk.mapper.FriendMapper;
 import com.chaobk.mapper.SiteSettingMapper;
+import com.chaobk.model.dto.Friend;
 import com.chaobk.model.vo.FriendInfo;
 import com.chaobk.service.FriendService;
 import com.chaobk.service.RedisService;
 import com.chaobk.util.markdown.MarkdownUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -23,13 +25,11 @@ import java.util.List;
  * @Date: 2020-09-08
  */
 @Service
+@RequiredArgsConstructor
 public class FriendServiceImpl implements FriendService {
-	@Autowired
-	FriendMapper friendMapper;
-	@Autowired
-	SiteSettingMapper siteSettingMapper;
-	@Autowired
-	RedisService redisService;
+	private final FriendMapper friendMapper;
+	private final SiteSettingMapper siteSettingMapper;
+	private final RedisService redisService;
 
 	@Override
 	public List<com.chaobk.entity.Friend> getFriendList() {
@@ -83,6 +83,12 @@ public class FriendServiceImpl implements FriendService {
 		}
 	}
 
+	/**
+	 * TODO md作用分析
+	 * @param cache
+	 * @param md
+	 * @return
+	 */
 	@Override
 	public FriendInfo getFriendInfo(boolean cache, boolean md) {
 		String redisKey = RedisKeyConstants.FRIEND_INFO_MAP;
@@ -92,21 +98,18 @@ public class FriendServiceImpl implements FriendService {
 				return friendInfoFromRedis;
 			}
 		}
-		List<SiteSetting> siteSettings = siteSettingMapper.getFriendInfo();
+		List<SiteSetting> siteSettings = siteSettingMapper.selectList(new QueryWrapper<SiteSetting>().eq("type", SiteSettingConstants.TYPE_4));
+
 		FriendInfo friendInfo = new FriendInfo();
 		for (SiteSetting siteSetting : siteSettings) {
-			if ("friendContent".equals(siteSetting.getNameEn())) {
+			if (SiteSettingConstants.FRIEND_CONTENT.equals(siteSetting.getNameEn())) {
 				if (md) {
 					friendInfo.setContent(MarkdownUtils.markdownToHtmlExtensions(siteSetting.getValue()));
 				} else {
 					friendInfo.setContent(siteSetting.getValue());
 				}
-			} else if ("friendCommentEnabled".equals(siteSetting.getNameEn())) {
-				if ("1".equals(siteSetting.getValue())) {
-					friendInfo.setCommentEnabled(true);
-				} else {
-					friendInfo.setCommentEnabled(false);
-				}
+			} else if (SiteSettingConstants.FRIEND_COMMENT_ENABLED.equals(siteSetting.getNameEn())) {
+				friendInfo.setCommentEnabled(SiteSettingConstants.FRIEND_COMMENT_ENABLED_YES.equals(siteSetting.getValue()));
 			}
 		}
 		if (cache && md) {
