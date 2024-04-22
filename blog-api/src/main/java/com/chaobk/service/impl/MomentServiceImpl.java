@@ -1,15 +1,15 @@
 package com.chaobk.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.chaobk.entity.Moment;
 import com.chaobk.exception.NotFoundException;
 import com.chaobk.exception.PersistenceException;
 import com.chaobk.mapper.MomentMapper;
 import com.chaobk.service.MomentService;
 import com.chaobk.util.markdown.MarkdownUtils;
+import com.github.pagehelper.PageHelper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,9 +19,9 @@ import java.util.List;
  * @Date: 2020-08-24
  */
 @Service
+@RequiredArgsConstructor
 public class MomentServiceImpl implements MomentService {
-	@Autowired
-	MomentMapper momentMapper;
+	private final MomentMapper momentMapper;
 	//每页显示5条动态
 	private static final int pageSize = 5;
 	//动态列表排序方式
@@ -37,7 +37,7 @@ public class MomentServiceImpl implements MomentService {
 	@Override
 	public List<Moment> getMomentVOList(Integer pageNum, boolean adminIdentity) {
 		PageHelper.startPage(pageNum, pageSize, orderBy);
-		List<Moment> moments = momentMapper.getMomentList();
+		List<Moment> moments = momentMapper.selectList(null);
 		for (Moment moment : moments) {
 			if (adminIdentity || moment.getPublished()) {
 				moment.setContent(MarkdownUtils.markdownToHtmlExtensions(moment.getContent()));

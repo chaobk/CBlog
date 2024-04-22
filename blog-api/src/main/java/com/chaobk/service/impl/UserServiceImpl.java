@@ -1,17 +1,18 @@
 package com.chaobk.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.chaobk.entity.User;
+import com.chaobk.exception.NotFoundException;
+import com.chaobk.mapper.UserMapper;
+import com.chaobk.service.UserService;
 import com.chaobk.util.HashUtils;
 import com.chaobk.util.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import com.chaobk.entity.User;
-import com.chaobk.exception.NotFoundException;
-import com.chaobk.mapper.UserMapper;
-import com.chaobk.service.UserService;
 
 /**
  * @Description: 用户业务层接口实现类
@@ -19,13 +20,13 @@ import com.chaobk.service.UserService;
  * @Date: 2020-07-19
  */
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
-	@Autowired
-	private UserMapper userMapper;
+	private final UserMapper userMapper;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userMapper.findByUsername(username);
+		User user = userMapper.selectOne(new QueryWrapper<User>().eq("username", username));
 		if (user == null) {
 			throw new UsernameNotFoundException("用户不存在");
 		}
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public User findUserByUsernameAndPassword(String username, String password) {
-		User user = userMapper.findByUsername(username);
+		User user = userMapper.selectOne(new QueryWrapper<User>().eq("username", username));
 		if (user == null) {
 			throw new UsernameNotFoundException("用户不存在");
 		}

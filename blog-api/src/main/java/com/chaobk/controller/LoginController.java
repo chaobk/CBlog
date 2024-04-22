@@ -1,15 +1,17 @@
 package com.chaobk.controller;
 
+import com.chaobk.constant.JwtConstants;
+import com.chaobk.entity.User;
 import com.chaobk.model.dto.LoginInfo;
 import com.chaobk.model.vo.Result;
+import com.chaobk.service.UserService;
 import com.chaobk.util.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.chaobk.constant.JwtConstants;
-import com.chaobk.entity.User;
-import com.chaobk.service.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,9 +22,10 @@ import java.util.Map;
  * @Date: 2020-09-02
  */
 @RestController
+@RequiredArgsConstructor
+@Api(tags = "LoginController - 前台登录")
 public class LoginController {
-	@Autowired
-	UserService userService;
+	private final UserService userService;
 
 	/**
 	 * 登录成功后，签发博主身份Token
@@ -31,6 +34,7 @@ public class LoginController {
 	 * @return
 	 */
 	@PostMapping("/login")
+	@ApiOperation("登录接口，成功后签发博主身份Token")
 	public Result login(@RequestBody LoginInfo loginInfo) {
 		User user = userService.findUserByUsernameAndPassword(loginInfo.getUsername(), loginInfo.getPassword());
 		if (!"ROLE_admin".equals(user.getRole())) {

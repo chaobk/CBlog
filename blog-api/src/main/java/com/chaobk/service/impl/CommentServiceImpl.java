@@ -1,13 +1,13 @@
 package com.chaobk.service.impl;
 
-import com.chaobk.model.dto.Comment;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.chaobk.exception.PersistenceException;
 import com.chaobk.mapper.CommentMapper;
+import com.chaobk.model.dto.Comment;
 import com.chaobk.model.vo.PageComment;
 import com.chaobk.service.CommentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,9 +19,9 @@ import java.util.List;
  * @Date: 2020-08-03
  */
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
-	@Autowired
-	CommentMapper commentMapper;
+	private final CommentMapper commentMapper;
 
 	@Override
 	public List<com.chaobk.entity.Comment> getListByPageAndParentCommentId(Integer page, Long blogId, Long parentCommentId) {

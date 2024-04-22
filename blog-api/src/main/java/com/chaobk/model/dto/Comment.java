@@ -1,5 +1,7 @@
 package com.chaobk.model.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,20 +18,35 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
+@ApiModel
 public class Comment {
 	private Long id;
-	private String nickname;//昵称
-	private String email;//邮箱
-	private String content;//评论内容
-	private String avatar;//头像(图片路径)
-	private Date createTime;//评论时间
-	private String website;//个人网站
-	private String ip;//评论者ip地址
-	private Boolean published;//公开或回收站
-	private Boolean adminComment;//博主回复
-	private Integer page;//0普通文章，1关于我页面
-	private Boolean notice;//接收邮件提醒
-	private Long parentCommentId;//父评论id
-	private Long blogId;//所属的文章id
-	private String qq;//如果评论昵称为QQ号，则将昵称和头像置为QQ昵称和QQ头像，并将此字段置为QQ号备份
+	@ApiModelProperty(value = "昵称")
+	private String nickname;
+	@ApiModelProperty(value = "邮箱")
+	private String email;
+	@ApiModelProperty(value = "评论内容")
+	private String content;
+	@ApiModelProperty(value = "头像(图片路径)")
+	private String avatar;
+	@ApiModelProperty(value = "评论时间")
+	private Date createTime;
+	@ApiModelProperty(value = "个人网站")
+	private String website;
+	@ApiModelProperty(value = "评论者ip地址")
+	private String ip;
+	@ApiModelProperty(value = "是否公开")
+	private Boolean published;
+	@ApiModelProperty(value = "是否博主回复")
+	private Boolean adminComment;
+	@ApiModelProperty(value = "0普通文章，1关于我页面")
+	private Integer page;
+	@ApiModelProperty(value = "接收邮件提醒")
+	private Boolean notice;
+	@ApiModelProperty(value = "父评论id")
+	private Long parentCommentId;
+	@ApiModelProperty(value = "所属的文章id")
+	private Long blogId;
+	@ApiModelProperty(value = "QQ号，如果评论昵称为QQ号，则将昵称和头像置为QQ昵称和QQ头像，并将此字段置为QQ号备份")
+	private String qq;
 }

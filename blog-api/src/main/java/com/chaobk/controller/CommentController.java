@@ -100,6 +100,7 @@ public class CommentController {
 	/**
 	 * 提交评论 又长又臭 能用就不改了:)
 	 * 单个ip，30秒内允许提交1次评论
+	 * TODO 太长了，之后看
 	 *
 	 * @param comment 评论DTO
 	 * @param request 获取ip
@@ -108,6 +109,7 @@ public class CommentController {
 	 */
 	@AccessLimit(seconds = 30, maxCount = 1, msg = "30秒内只能提交一次评论")
 	@PostMapping("/comment")
+	@ApiOperation("提交评论")
 	public Result postComment(@RequestBody Comment comment,
 	                          HttpServletRequest request,
 	                          @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {

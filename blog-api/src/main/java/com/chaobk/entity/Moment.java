@@ -1,5 +1,6 @@
 package com.chaobk.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,5 +22,6 @@ public class Moment {
 	private String content;//动态内容
 	private Date createTime;//创建时间
 	private Integer likes;//点赞数量
+	@TableField("is_published")
 	private Boolean published;//是否公开
 }

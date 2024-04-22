@@ -1,5 +1,6 @@
 package com.chaobk.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.chaobk.model.vo.Friend;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface FriendMapper {
+public interface FriendMapper extends BaseMapper<com.chaobk.entity.Friend> {
 	List<com.chaobk.entity.Friend> getFriendList();
 
 	List<Friend> getFriendVOList();

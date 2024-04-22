@@ -1,5 +1,6 @@
 package com.chaobk.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.chaobk.model.dto.Comment;
 import com.chaobk.model.vo.PageComment;
 import org.apache.ibatis.annotations.Mapper;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface CommentMapper {
+public interface CommentMapper extends BaseMapper<com.chaobk.entity.Comment> {
 	List<com.chaobk.entity.Comment> getListByPageAndParentCommentId(Integer page, Long blogId, Long parentCommentId);
 
 	List<com.chaobk.entity.Comment> getListByParentCommentId(Long parentCommentId);

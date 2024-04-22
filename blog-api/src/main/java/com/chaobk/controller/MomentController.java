@@ -1,24 +1,22 @@
 package com.chaobk.controller;
 
-import com.chaobk.enums.VisitBehavior;
-import com.chaobk.model.vo.PageResult;
-import com.chaobk.model.vo.Result;
-import com.chaobk.service.impl.UserServiceImpl;
-import com.chaobk.util.JwtUtils;
-import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.chaobk.annotation.AccessLimit;
 import com.chaobk.annotation.VisitLogger;
 import com.chaobk.constant.JwtConstants;
 import com.chaobk.entity.Moment;
 import com.chaobk.entity.User;
+import com.chaobk.enums.VisitBehavior;
+import com.chaobk.model.vo.PageResult;
+import com.chaobk.model.vo.Result;
 import com.chaobk.service.MomentService;
+import com.chaobk.service.impl.UserServiceImpl;
+import com.chaobk.util.JwtUtils;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Description: 动态
@@ -26,23 +24,17 @@ import com.chaobk.service.MomentService;
  * @Date: 2020-08-25
  */
 @RestController
+@RequiredArgsConstructor
+@Api(tags = "MomentController - 动态")
 public class MomentController {
-	@Autowired
-	MomentService momentService;
-	@Autowired
-    UserServiceImpl userService;
+	private final MomentService momentService;
+    private final UserServiceImpl userService;
 
-	/**
-	 * 分页查询动态List
-	 *
-	 * @param pageNum 页码
-	 * @param jwt     博主访问Token
-	 * @return
-	 */
 	@VisitLogger(VisitBehavior.MOMENT)
 	@GetMapping("/moments")
-	public Result moments(@RequestParam(defaultValue = "1") Integer pageNum,
-                          @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
+	@ApiOperation("分页查询动态")
+	public Result moments(@ApiParam("页码") @RequestParam(defaultValue = "1") Integer pageNum,
+                           @ApiParam("博主访问Token") @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
 		boolean adminIdentity = false;
 		if (JwtUtils.judgeTokenIsExist(jwt)) {
 			try {
@@ -74,6 +66,7 @@ public class MomentController {
 	@AccessLimit(seconds = 86400, maxCount = 1, msg = "不可以重复点赞哦")
 	@VisitLogger(VisitBehavior.LIKE_MOMENT)
 	@PostMapping("/moment/like/{id}")
+	@ApiOperation("给动态点赞")
 	public Result like(@PathVariable Long id) {
 		momentService.addLikeByMomentId(id);
 		return Result.ok("点赞成功");

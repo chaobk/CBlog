@@ -33,7 +33,7 @@ public class FriendServiceImpl implements FriendService {
 
 	@Override
 	public List<com.chaobk.entity.Friend> getFriendList() {
-		return friendMapper.getFriendList();
+		return friendMapper.selectList(null);
 	}
 
 	@Override

@@ -1,8 +1,9 @@
 package com.chaobk.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.chaobk.entity.Moment;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-import com.chaobk.entity.Moment;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface MomentMapper {
+public interface MomentMapper extends BaseMapper<Moment> {
 	List<Moment> getMomentList();
 
 	int addLikeByMomentId(Long momentId);
