@@ -57,6 +57,7 @@ public class AboutServiceImpl implements AboutService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)  // Transactional 回滚是否会对mysql和redis有影响？
 	public void updateAbout(Map<String, String> map) {
 		Set<String> keySet = map.keySet();
 		for (String key : keySet) {

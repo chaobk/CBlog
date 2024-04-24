@@ -1,6 +1,8 @@
 package com.chaobk.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,15 +26,24 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@ApiModel("用户实体类")
 public class User implements UserDetails {
 	private Long id;
+	@ApiModelProperty("用户名")
 	private String username;
+	@ApiModelProperty("密码")
 	private String password;
+	@ApiModelProperty("昵称")
 	private String nickname;
+	@ApiModelProperty("头像")
 	private String avatar;
+	@ApiModelProperty("邮箱")
 	private String email;
+	@ApiModelProperty("创建时间")
 	private Date createTime;
+	@ApiModelProperty("更新时间")
 	private Date updateTime;
+	@ApiModelProperty("角色")
 	private String role;
 
 	@JsonIgnore

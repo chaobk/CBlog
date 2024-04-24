@@ -5,7 +5,7 @@ import com.chaobk.model.vo.Result;
 import com.chaobk.service.AboutService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,10 +17,10 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/admin")
+@RequiredArgsConstructor
 @Api(tags = "AboutAdminController - 关于我页面 后台管理")
 public class AboutAdminController {
-	@Autowired
-	AboutService aboutService;
+	private final AboutService aboutService;
 
 	/**
 	 * 获取关于我页面配置
@@ -41,6 +41,7 @@ public class AboutAdminController {
 	 */
 	@OperationLogger("修改关于我页面")
 	@PutMapping("/about")
+	@ApiOperation("修改关于我页面")
 	public Result updateAbout(@RequestBody Map<String, String> map) {
 		aboutService.updateAbout(map);
 		return Result.ok("修改成功");
