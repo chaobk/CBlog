@@ -1,8 +1,6 @@
 package com.chaobk.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chaobk.constant.RedisKeyConstants;
 import com.chaobk.entity.Tag;
 import com.chaobk.exception.NotFoundException;
@@ -10,6 +8,9 @@ import com.chaobk.exception.PersistenceException;
 import com.chaobk.mapper.TagMapper;
 import com.chaobk.service.RedisService;
 import com.chaobk.service.TagService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,15 +20,14 @@ import java.util.List;
  * @Date: 2020-07-30
  */
 @Service
+@RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
-	@Autowired
-	TagMapper tagMapper;
-	@Autowired
-	RedisService redisService;
+	private final TagMapper tagMapper;
+	private final RedisService redisService;
 
 	@Override
 	public List<Tag> getTagList() {
-		return tagMapper.getTagList();
+		return tagMapper.selectList(new QueryWrapper<Tag>().orderByDesc("id"));
 	}
 
 	@Override

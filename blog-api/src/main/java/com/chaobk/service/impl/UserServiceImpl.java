@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.Date;
+
 /**
  * @Description: 用户业务层接口实现类
  * @Author: Naccl
@@ -58,7 +60,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public boolean changeAccount(User user, String jwt) {
 		String username = JwtUtils.getTokenBody(jwt).getSubject();
 		user.setPassword(HashUtils.getBC(user.getPassword()));
-		if (userMapper.updateUserByUsername(username, user) != 1) {
+		user.setUpdateTime(new Date());
+		if (userMapper.update(user, new QueryWrapper<User>().eq("username", username)) != 1) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return false;
 		}

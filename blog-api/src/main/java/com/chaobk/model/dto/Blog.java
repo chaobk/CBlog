@@ -1,5 +1,6 @@
 package com.chaobk.model.dto;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@ApiModel(value = "博客对象")
 public class Blog {
 	private Long id;
 	private String title;//文章标题

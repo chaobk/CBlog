@@ -116,10 +116,9 @@ public class CommentServiceImpl implements CommentService {
 		}
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void deleteCommentsByBlogId(Long blogId) {
-		commentMapper.deleteCommentsByBlogId(blogId);
+		commentMapper.deleteById(blogId);
 	}
 
 	@Transactional(rollbackFor = Exception.class)

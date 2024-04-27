@@ -1,8 +1,6 @@
 package com.chaobk.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chaobk.constant.RedisKeyConstants;
 import com.chaobk.entity.Category;
 import com.chaobk.exception.NotFoundException;
@@ -10,7 +8,9 @@ import com.chaobk.exception.PersistenceException;
 import com.chaobk.mapper.CategoryMapper;
 import com.chaobk.service.CategoryService;
 import com.chaobk.service.RedisService;
-import com.chaobk.service.TagService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,17 +20,14 @@ import java.util.List;
  * @Date: 2020-07-29
  */
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
-	@Autowired
-	CategoryMapper categoryMapper;
-	@Autowired
-	TagService tagService;
-	@Autowired
-	RedisService redisService;
+	private final CategoryMapper categoryMapper;
+	private final RedisService redisService;
 
 	@Override
 	public List<Category> getCategoryList() {
-		return categoryMapper.getCategoryList();
+		return categoryMapper.selectList(new QueryWrapper<Category>().orderByDesc("id"));
 	}
 
 	@Override

@@ -215,13 +215,6 @@
         from blog
     </select>
 
-    <!--按id删除博客-->
-    <delete id="deleteBlogById">
-        delete
-        from blog
-        where id = #{id}
-    </delete>
-
     <!--维护 blog_tag 表(删除)-->
     <delete id="deleteBlogTagByBlogId">
         delete
@@ -245,20 +238,6 @@
                 #{top}, #{createTime}, #{updateTime}, #{views}, #{words}, #{readTime}, #{category.id}, #{user.id},
                 #{password})
     </insert>
-
-    <!--更新博客推荐状态-->
-    <update id="updateBlogRecommendById">
-        update blog
-        set is_recommend=#{recommend}
-        where id = #{blogId}
-    </update>
-
-    <!--更新博客置顶状态-->
-    <update id="updateBlogTopById">
-        update blog
-        set is_top=#{top}
-        where id = #{blogId}
-    </update>
 
     <!--更新博客可见性状态-->
     <update id="updateBlogVisibilityById">

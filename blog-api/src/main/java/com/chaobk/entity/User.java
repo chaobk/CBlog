@@ -28,22 +28,23 @@ import java.util.List;
 @ToString
 @ApiModel("用户实体类")
 public class User implements UserDetails {
+	@ApiModelProperty(hidden = true)
 	private Long id;
 	@ApiModelProperty("用户名")
 	private String username;
 	@ApiModelProperty("密码")
 	private String password;
-	@ApiModelProperty("昵称")
+	@ApiModelProperty(value = "昵称", hidden = true)
 	private String nickname;
-	@ApiModelProperty("头像")
+	@ApiModelProperty(value = "头像", hidden = true)
 	private String avatar;
-	@ApiModelProperty("邮箱")
+	@ApiModelProperty(value = "邮箱", hidden = true)
 	private String email;
-	@ApiModelProperty("创建时间")
+	@ApiModelProperty(value = "创建时间", hidden = true)
 	private Date createTime;
-	@ApiModelProperty("更新时间")
+	@ApiModelProperty(value = "更新时间", hidden = true)
 	private Date updateTime;
-	@ApiModelProperty("角色")
+	@ApiModelProperty(value = "角色", hidden = true)
 	private String role;
 
 	@JsonIgnore

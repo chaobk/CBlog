@@ -1,5 +1,6 @@
 package com.chaobk.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,8 @@ import java.util.List;
 @ToString
 public class Category {
 	private Long id;
+	@TableField(value = "category_name")
 	private String name;//分类名称
+	@TableField(exist = false)
 	private List<Blog> blogs = new ArrayList<>();//该分类下的博客文章
 }
