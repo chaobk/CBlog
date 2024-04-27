@@ -6,7 +6,7 @@
 <p align="center">
 	<img src="https://img.shields.io/badge/JDK-1.8+-orange">
 	<img src="https://img.shields.io/badge/SpringBoot-2.7.6-brightgreen">
-	<img src="https://img.shields.io/badge/MyBatis-3.5.5-red">
+	<img src="https://img.shields.io/badge/MyBatis-3.5.16-red">
 	<img src="https://img.shields.io/badge/Vue-2.6.11-brightgreen">
 	<img src="https://img.shields.io/badge/license-MIT-blue">
 </p>
