@@ -1,22 +1,19 @@
 package com.chaobk.controller.admin;
 
-import com.chaobk.util.StringUtils;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.chaobk.annotation.OperationLogger;
 import com.chaobk.entity.Blog;
 import com.chaobk.entity.Comment;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.BlogService;
 import com.chaobk.service.CommentService;
+import com.chaobk.util.StringUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,11 +24,11 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/admin")
+@RequiredArgsConstructor
+@Api(tags = "CommentAdminController - 博客评论后台管理")
 public class CommentAdminController {
-	@Autowired
-	CommentService commentService;
-	@Autowired
-	BlogService blogService;
+	private final CommentService commentService;
+	private final BlogService blogService;
 
 	/**
 	 * 按页面和博客id分页查询评论List
@@ -43,6 +40,7 @@ public class CommentAdminController {
 	 * @return
 	 */
 	@GetMapping("/comments")
+	@ApiOperation("按页面和博客id分页查询评论List")
 	public Result comments(@RequestParam(defaultValue = "") Integer page,
 	                       @RequestParam(defaultValue = "") Long blogId,
 	                       @RequestParam(defaultValue = "1") Integer pageNum,
@@ -60,6 +58,7 @@ public class CommentAdminController {
 	 * @return
 	 */
 	@GetMapping("/blogIdAndTitle")
+	@ApiOperation("获取所有博客id和title 供评论分类的选择")
 	public Result blogIdAndTitle() {
 		List<Blog> blogs = blogService.getIdAndTitleList();
 		return Result.ok("请求成功", blogs);
@@ -74,7 +73,8 @@ public class CommentAdminController {
 	 */
 	@OperationLogger("更新评论公开状态")
 	@PutMapping("/comment/published")
-	public Result updatePublished(@RequestParam Long id, @RequestParam Boolean published) {
+	@ApiOperation("更新评论公开状态")
+	public Result updatePublished(@ApiParam("评论id") @RequestParam Long id, @ApiParam("是否公开") @RequestParam Boolean published) {
 		commentService.updateCommentPublishedById(id, published);
 		return Result.ok("操作成功");
 	}

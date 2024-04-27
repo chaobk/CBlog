@@ -72,18 +72,6 @@
         where is_published=true and password='' and content like #{queryPattern}
     </select>
 
-    <resultMap id="blogIdAndTitle" type="com.chaobk.model.vo.BlogIdAndTitle">
-        <id property="id" column="id"/>
-        <result property="title" column="title"/>
-    </resultMap>
-
-    <!--查询所有博客id和title-->
-    <select id="getIdAndTitleList" resultMap="blogIdAndTitle">
-        select id, title
-        from blog
-        order by create_time desc
-    </select>
-
     <resultMap id="newBlog" type="com.chaobk.model.vo.NewBlog">
         <id property="id" column="id"/>
         <result property="title" column="title"/>

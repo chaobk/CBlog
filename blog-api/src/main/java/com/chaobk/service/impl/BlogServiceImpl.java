@@ -1,5 +1,6 @@
 package com.chaobk.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chaobk.constant.RedisKeyConstants;
 import com.chaobk.exception.NotFoundException;
 import com.chaobk.exception.PersistenceException;
@@ -85,7 +86,9 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public List<com.chaobk.entity.Blog> getIdAndTitleList() {
-        return blogMapper.getIdAndTitleList();
+        return blogMapper.selectList(new QueryWrapper<com.chaobk.entity.Blog>()
+                .select("id", "title")
+                .orderByDesc("create_time"));
     }
 
     @Override

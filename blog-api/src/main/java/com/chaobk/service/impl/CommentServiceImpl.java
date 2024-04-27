@@ -90,7 +90,6 @@ public class CommentServiceImpl implements CommentService {
 				hideComment(c);
 			}
 		}
-
 		if (commentMapper.updateCommentPublishedById(commentId, published) != 1) {
 			throw new PersistenceException("操作失败");
 		}

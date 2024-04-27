@@ -45,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void saveCategory(Category category) {
-		if (categoryMapper.saveCategory(category) != 1) {
+		if (categoryMapper.insert(category) != 1) {
 			throw new PersistenceException("分类添加失败");
 		}
 		redisService.deleteCacheByKey(RedisKeyConstants.CATEGORY_NAME_LIST);
@@ -62,13 +62,13 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Category getCategoryByName(String name) {
-		return categoryMapper.getCategoryByName(name);
+		return categoryMapper.selectOne(new QueryWrapper<Category>().eq("category_name", name));
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void deleteCategoryById(Long id) {
-		if (categoryMapper.deleteCategoryById(id) != 1) {
+		if (categoryMapper.deleteById(id) != 1) {
 			throw new PersistenceException("删除分类失败");
 		}
 		redisService.deleteCacheByKey(RedisKeyConstants.CATEGORY_NAME_LIST);
@@ -77,7 +77,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateCategory(Category category) {
-		if (categoryMapper.updateCategory(category) != 1) {
+		if (categoryMapper.updateById(category) != 1) {
 			throw new PersistenceException("分类更新失败");
 		}
 		redisService.deleteCacheByKey(RedisKeyConstants.CATEGORY_NAME_LIST);

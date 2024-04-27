@@ -19,13 +19,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
 
 	List<Category> getCategoryNameList();
 
-	int saveCategory(Category category);
-
 	Category getCategoryById(Long id);
 
-	Category getCategoryByName(String name);
-
 	int deleteCategoryById(Long id);
-
-	int updateCategory(Category category);
 }

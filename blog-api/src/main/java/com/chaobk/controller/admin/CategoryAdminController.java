@@ -1,22 +1,18 @@
 package com.chaobk.controller.admin;
 
-import com.chaobk.util.StringUtils;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.chaobk.annotation.OperationLogger;
 import com.chaobk.entity.Category;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.BlogService;
 import com.chaobk.service.CategoryService;
+import com.chaobk.util.StringUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Description: 博客分类后台管理
@@ -25,20 +21,14 @@ import com.chaobk.service.CategoryService;
  */
 @RestController
 @RequestMapping("/admin")
+@RequiredArgsConstructor
+@Api(tags = "CategoryAdminController - 博客分类后台管理")
 public class CategoryAdminController {
-	@Autowired
-	BlogService blogService;
-	@Autowired
-	CategoryService categoryService;
+	private final BlogService blogService;
+	private final CategoryService categoryService;
 
-	/**
-	 * 获取博客分类列表
-	 *
-	 * @param pageNum  页码
-	 * @param pageSize 每页个数
-	 * @return
-	 */
 	@GetMapping("/categories")
+	@ApiOperation("/admin/categories - 获取博客分类列表")
 	public Result categories(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
 		String orderBy = "id desc";
 		PageHelper.startPage(pageNum, pageSize, orderBy);
@@ -46,24 +36,13 @@ public class CategoryAdminController {
 		return Result.ok("请求成功", pageInfo);
 	}
 
-	/**
-	 * 添加新分类
-	 *
-	 * @param category 分类实体
-	 * @return
-	 */
 	@OperationLogger("添加分类")
 	@PostMapping("/category")
+	@ApiOperation("添加新分类")
 	public Result saveCategory(@RequestBody Category category) {
 		return getResult(category, "save");
 	}
 
-	/**
-	 * 修改分类名称
-	 *
-	 * @param category 分类实体
-	 * @return
-	 */
 	@OperationLogger("修改分类")
 	@PutMapping("/category")
 	public Result updateCategory(@RequestBody Category category) {
@@ -96,15 +75,10 @@ public class CategoryAdminController {
 		}
 	}
 
-	/**
-	 * 按id删除分类
-	 *
-	 * @param id 分类id
-	 * @return
-	 */
 	@OperationLogger("删除分类")
 	@DeleteMapping("/category")
-	public Result delete(@RequestParam Long id) {
+	@ApiOperation("删除分类")
+	public Result delete(@ApiParam("分类的id") @RequestParam Long id) {
 		//删除存在博客关联的分类后，该博客的查询会出异常
 		int num = blogService.countBlogByCategoryId(id);
 		if (num != 0) {

@@ -119,14 +119,9 @@ public class BlogAdminController {
 		return getResult(blog, "save");
 	}
 
-	/**
-	 * 更新博客
-	 *
-	 * @param blog 博客文章DTO
-	 * @return
-	 */
 	@OperationLogger("更新博客")
 	@PutMapping("/blog")
+	@ApiOperation("/admin/blog - 更新博客")
 	public Result updateBlog(@RequestBody Blog blog) {
 		return getResult(blog, "update");
 	}

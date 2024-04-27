@@ -22,8 +22,6 @@ public interface BlogMapper extends BaseMapper<com.chaobk.entity.Blog> {
 
 	List<SearchBlog> getSearchBlogListByQueryAndIsPublished(String query);
 
-	List<com.chaobk.entity.Blog> getIdAndTitleList();
-
 	List<NewBlog> getNewBlogListByIsPublished();
 
 	List<BlogInfo> getBlogInfoListByIsPublished();
