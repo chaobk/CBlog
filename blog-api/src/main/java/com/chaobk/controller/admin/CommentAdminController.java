@@ -88,32 +88,23 @@ public class CommentAdminController {
 	 */
 	@OperationLogger("更新评论邮件提醒状态")
 	@PutMapping("/comment/notice")
-	public Result updateNotice(@RequestParam Long id, @RequestParam Boolean notice) {
+	@ApiOperation("更新评论邮件提醒状态")
+	public Result updateNotice(@ApiParam("评论id") @RequestParam Long id, @ApiParam("是否接收提醒") @RequestParam Boolean notice) {
 		commentService.updateCommentNoticeById(id, notice);
 		return Result.ok("操作成功");
 	}
 
-	/**
-	 * 按id删除该评论及其所有子评论
-	 *
-	 * @param id 评论id
-	 * @return
-	 */
 	@OperationLogger("删除评论")
 	@DeleteMapping("/comment")
-	public Result delete(@RequestParam Long id) {
+	@ApiOperation("按id删除该评论及其所有子评论")
+	public Result delete(@ApiParam("评论id") @RequestParam Long id) {
 		commentService.deleteCommentById(id);
 		return Result.ok("删除成功");
 	}
 
-	/**
-	 * 修改评论
-	 *
-	 * @param comment 评论实体
-	 * @return
-	 */
 	@OperationLogger("修改评论")
 	@PutMapping("/comment")
+	@ApiOperation("修改评论")
 	public Result updateComment(@RequestBody Comment comment) {
 		if (StringUtils.isEmpty(comment.getNickname(), comment.getAvatar(), comment.getEmail(), comment.getIp(), comment.getContent())) {
 			return Result.error("参数有误");

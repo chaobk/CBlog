@@ -56,8 +56,4 @@
         delete from visit_log where id=#{id}
     </delete>
 
-    <!--查询今日访问量-->
-    <select id="countVisitLogByToday" resultType="java.lang.Integer">
-        select count(*) from visit_log where date(create_time)=curdate()
-    </select>
 </mapper>

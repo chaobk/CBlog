@@ -1,21 +1,13 @@
 package com.chaobk.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.chaobk.entity.Category;
-import com.chaobk.entity.CityVisitor;
-import com.chaobk.entity.Tag;
-import com.chaobk.entity.VisitRecord;
-import com.chaobk.mapper.BlogMapper;
-import com.chaobk.mapper.CategoryMapper;
-import com.chaobk.mapper.CityVisitorMapper;
-import com.chaobk.mapper.CommentMapper;
-import com.chaobk.mapper.TagMapper;
-import com.chaobk.mapper.VisitLogMapper;
-import com.chaobk.mapper.VisitRecordMapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.chaobk.entity.*;
+import com.chaobk.mapper.*;
 import com.chaobk.model.vo.CategoryBlogCount;
 import com.chaobk.model.vo.TagBlogCount;
 import com.chaobk.service.DashboardService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,27 +20,21 @@ import java.util.Map;
  * @Date: 2020-10-08
  */
 @Service
+@RequiredArgsConstructor
 public class DashboardServiceImpl implements DashboardService {
-	@Autowired
-	BlogMapper blogMapper;
-	@Autowired
-	CommentMapper commentMapper;
-	@Autowired
-	CategoryMapper categoryMapper;
-	@Autowired
-	TagMapper tagMapper;
-	@Autowired
-	VisitLogMapper visitLogMapper;
-	@Autowired
-	VisitRecordMapper visitRecordMapper;
-	@Autowired
-	CityVisitorMapper cityVisitorMapper;
+	private final BlogMapper blogMapper;
+	private final CommentMapper commentMapper;
+	private final CategoryMapper categoryMapper;
+	private final TagMapper tagMapper;
+	private final VisitLogMapper visitLogMapper;
+	private final VisitRecordMapper visitRecordMapper;
+	private final CityVisitorMapper cityVisitorMapper;
 	//查询最近30天的记录
 	private static final int visitRecordLimitNum = 30;
 
 	@Override
 	public int countVisitLogByToday() {
-		return visitLogMapper.countVisitLogByToday();
+		return Math.toIntExact(visitLogMapper.selectCount(new QueryWrapper<VisitLog>().apply("date(create_time)=curdate()")));
 	}
 
 	@Override

@@ -1,14 +1,15 @@
 package com.chaobk.controller.admin;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.chaobk.constant.RedisKeyConstants;
 import com.chaobk.entity.CityVisitor;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.DashboardService;
 import com.chaobk.service.RedisService;
+import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +22,11 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/admin")
+@RequiredArgsConstructor
+@Api(tags = "后台管理仪表盘")
 public class DashboardAdminController {
-	@Autowired
-	DashboardService dashboardService;
-	@Autowired
-	RedisService redisService;
+	private final DashboardService dashboardService;
+	private final RedisService redisService;
 
 	@GetMapping("/dashboard")
 	public Result dashboard() {
