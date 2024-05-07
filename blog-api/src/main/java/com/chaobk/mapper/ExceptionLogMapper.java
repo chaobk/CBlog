@@ -1,10 +1,9 @@
 package com.chaobk.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.chaobk.entity.ExceptionLog;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-import com.chaobk.entity.ExceptionLog;
-
-import java.util.List;
 
 /**
  * @Description: 异常日志持久层接口
@@ -13,10 +12,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface ExceptionLogMapper {
-	List<ExceptionLog> getExceptionLogListByDate(String startDate, String endDate);
-
+public interface ExceptionLogMapper extends BaseMapper<ExceptionLog> {
 	int saveExceptionLog(ExceptionLog log);
 
-	int deleteExceptionLogById(Long id);
 }

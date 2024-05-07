@@ -1,16 +1,15 @@
 package com.chaobk.controller.admin;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.chaobk.entity.ExceptionLog;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.ExceptionLogService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Description: 异常日志后台管理
@@ -19,9 +18,10 @@ import com.chaobk.service.ExceptionLogService;
  */
 @RestController
 @RequestMapping("/admin")
+@RequiredArgsConstructor
+@Api(tags = "exceptionLogController - 异常日志后台管理")
 public class ExceptionLogController {
-	@Autowired
-	ExceptionLogService exceptionLogService;
+	private final ExceptionLogService exceptionLogService;
 
 	/**
 	 * 分页查询异常日志列表
@@ -32,7 +32,8 @@ public class ExceptionLogController {
 	 * @return
 	 */
 	@GetMapping("/exceptionLogs")
-	public Result exceptionLogs(@RequestParam(defaultValue = "") String[] date,
+	@ApiOperation("分页查询异常日志列表")
+	public Result exceptionLogs(@ApiParam("按操作时间查询") @RequestParam(defaultValue = "") String[] date,
 	                            @RequestParam(defaultValue = "1") Integer pageNum,
 	                            @RequestParam(defaultValue = "10") Integer pageSize) {
 		String startDate = null;
@@ -47,14 +48,9 @@ public class ExceptionLogController {
 		return Result.ok("请求成功", pageInfo);
 	}
 
-	/**
-	 * 按id删除异常日志
-	 *
-	 * @param id 日志id
-	 * @return
-	 */
 	@DeleteMapping("/exceptionLog")
-	public Result delete(@RequestParam Long id) {
+	@ApiOperation("按id删除异常日志")
+	public Result delete(@ApiParam("要删除的日志id") @RequestParam Long id) {
 		exceptionLogService.deleteExceptionLogById(id);
 		return Result.ok("删除成功");
 	}

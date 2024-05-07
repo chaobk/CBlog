@@ -1,6 +1,7 @@
 package com.chaobk.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.chaobk.constant.RedisKeyConstants;
 import com.chaobk.constant.SiteSettingConstants;
 import com.chaobk.entity.SiteSetting;
@@ -41,25 +42,23 @@ public class FriendServiceImpl implements FriendService {
 		return friendMapper.getFriendVOList();
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateFriendPublishedById(Long friendId, Boolean published) {
-		if (friendMapper.updateFriendPublishedById(friendId, published) != 1) {
+		com.chaobk.entity.Friend friend = com.chaobk.entity.Friend.builder().id(friendId).published(published).build();
+		if (friendMapper.updateById(friend) != 1) {
 			throw new PersistenceException("操作失败");
 		}
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void saveFriend(com.chaobk.entity.Friend friend) {
 		friend.setViews(0);
 		friend.setCreateTime(new Date());
-		if (friendMapper.saveFriend(friend) != 1) {
+		if (friendMapper.insert(friend) != 1) {
 			throw new PersistenceException("添加失败");
 		}
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateFriend(Friend friend) {
 		if (friendMapper.updateFriend(friend) != 1) {
@@ -67,10 +66,9 @@ public class FriendServiceImpl implements FriendService {
 		}
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void deleteFriend(Long id) {
-		if (friendMapper.deleteFriend(id) != 1) {
+		if (friendMapper.deleteById(id) != 1) {
 			throw new PersistenceException("删除失败");
 		}
 	}
@@ -84,7 +82,7 @@ public class FriendServiceImpl implements FriendService {
 	}
 
 	/**
-	 * TODO md作用分析
+	 *
 	 * @param cache
 	 * @param md
 	 * @return
@@ -121,7 +119,8 @@ public class FriendServiceImpl implements FriendService {
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateFriendInfoContent(String content) {
-		if (siteSettingMapper.updateFriendInfoContent(content) != 1) {
+		UpdateWrapper<SiteSetting> wrapper = new UpdateWrapper<SiteSetting>().set("value", content).eq("name_en", "friendContent");
+		if (siteSettingMapper.update(wrapper) != 1) {
 			throw new PersistenceException("修改失败");
 		}
 		deleteFriendInfoRedisCache();
@@ -130,7 +129,10 @@ public class FriendServiceImpl implements FriendService {
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateFriendInfoCommentEnabled(Boolean commentEnabled) {
-		if (siteSettingMapper.updateFriendInfoCommentEnabled(commentEnabled) != 1) {
+		UpdateWrapper<SiteSetting> updateWrapper = new UpdateWrapper<>();
+		updateWrapper.set("value", commentEnabled);
+		updateWrapper.eq("name_en", "friendCommentEnabled");
+		if (siteSettingMapper.update(updateWrapper) != 1) {
 			throw new PersistenceException("修改失败");
 		}
 		deleteFriendInfoRedisCache();

@@ -15,8 +15,6 @@ import java.util.List;
 @Mapper
 @Repository
 public interface FriendMapper extends BaseMapper<com.chaobk.entity.Friend> {
-	List<com.chaobk.entity.Friend> getFriendList();
-
 	List<Friend> getFriendVOList();
 
 	int updateFriendPublishedById(Long id, Boolean published);
