@@ -1,16 +1,14 @@
 package com.chaobk.controller.admin;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.chaobk.entity.OperationLog;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.OperationLogService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Description: 操作日志后台管理
@@ -19,9 +17,10 @@ import com.chaobk.service.OperationLogService;
  */
 @RestController
 @RequestMapping("/admin")
+@RequiredArgsConstructor
+@Api(tags = "OperationLogController - 操作日志后台管理")
 public class OperationLogController {
-	@Autowired
-	OperationLogService operationLogService;
+	private final OperationLogService operationLogService;
 
 	/**
 	 * 分页查询操作日志列表
@@ -32,6 +31,7 @@ public class OperationLogController {
 	 * @return
 	 */
 	@GetMapping("/operationLogs")
+	@ApiOperation("分页查询操作日志列表")
 	public Result operationLogs(@RequestParam(defaultValue = "") String[] date,
 	                            @RequestParam(defaultValue = "1") Integer pageNum,
 	                            @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -54,6 +54,7 @@ public class OperationLogController {
 	 * @return
 	 */
 	@DeleteMapping("/operationLog")
+	@ApiOperation("按id删除操作日志")
 	public Result delete(@RequestParam Long id) {
 		operationLogService.deleteOperationLogById(id);
 		return Result.ok("删除成功");

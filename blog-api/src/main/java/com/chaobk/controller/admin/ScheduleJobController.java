@@ -1,22 +1,17 @@
 package com.chaobk.controller.admin;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.chaobk.annotation.OperationLogger;
 import com.chaobk.entity.ScheduleJob;
 import com.chaobk.entity.ScheduleJobLog;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.ScheduleJobService;
 import com.chaobk.util.common.ValidatorUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -27,18 +22,13 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/admin")
+@RequiredArgsConstructor
+@Api(tags = "定时任务动态管理")
 public class ScheduleJobController {
-	@Autowired
-	private ScheduleJobService scheduleJobService;
+	private final ScheduleJobService scheduleJobService;
 
-	/**
-	 * 分页查询定时任务列表
-	 *
-	 * @param pageNum  页码
-	 * @param pageSize 每页条数
-	 * @return
-	 */
 	@GetMapping("/jobs")
+	@ApiOperation("分页查询定时任务列表")
 	public Result jobs(@RequestParam(defaultValue = "1") Integer pageNum,
 	                   @RequestParam(defaultValue = "10") Integer pageSize) {
 		PageHelper.startPage(pageNum, pageSize);
@@ -54,6 +44,7 @@ public class ScheduleJobController {
 	 */
 	@OperationLogger("新建定时任务")
 	@PostMapping("/job")
+	@ApiOperation("新建定时任务")
 	public Result saveJob(@RequestBody ScheduleJob scheduleJob) {
 		scheduleJob.setStatus(false);
 		scheduleJob.setCreateTime(new Date());

@@ -1,20 +1,15 @@
 package com.chaobk.controller.admin;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.chaobk.annotation.OperationLogger;
 import com.chaobk.entity.Moment;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.MomentService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -25,9 +20,10 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/admin")
+@RequiredArgsConstructor
+@Api(tags = "MomentAdminController - 博客动态后台管理")
 public class MomentAdminController {
-	@Autowired
-	MomentService momentService;
+	private final MomentService momentService;
 
 	/**
 	 * 分页查询动态列表
@@ -37,6 +33,7 @@ public class MomentAdminController {
 	 * @return
 	 */
 	@GetMapping("/moments")
+	@ApiOperation("查询动态列表")
 	public Result moments(@RequestParam(defaultValue = "1") Integer pageNum,
 	                      @RequestParam(defaultValue = "10") Integer pageSize) {
 		String orderBy = "create_time desc";
@@ -54,7 +51,8 @@ public class MomentAdminController {
 	 */
 	@OperationLogger("更新动态公开状态")
 	@PutMapping("/moment/published")
-	public Result updatePublished(@RequestParam Long id, @RequestParam Boolean published) {
+	@ApiOperation("更新动态公开状态")
+	public Result updatePublished( @RequestParam Long id, @RequestParam Boolean published) {
 		momentService.updateMomentPublishedById(id, published);
 		return Result.ok("操作成功");
 	}
@@ -66,6 +64,7 @@ public class MomentAdminController {
 	 * @return
 	 */
 	@GetMapping("/moment")
+	@ApiOperation("根据id查询动态")
 	public Result moment(@RequestParam Long id) {
 		return Result.ok("获取成功", momentService.getMomentById(id));
 	}
@@ -78,6 +77,7 @@ public class MomentAdminController {
 	 */
 	@OperationLogger("删除动态")
 	@DeleteMapping("/moment")
+	@ApiOperation("删除动态")
 	public Result deleteMoment(@RequestParam Long id) {
 		momentService.deleteMomentById(id);
 		return Result.ok("删除成功");
@@ -91,6 +91,7 @@ public class MomentAdminController {
 	 */
 	@OperationLogger("发布动态")
 	@PostMapping("/moment")
+	@ApiOperation("发布动态")
 	public Result saveMoment(@RequestBody Moment moment) {
 		if (moment.getCreateTime() == null) {
 			moment.setCreateTime(new Date());
@@ -107,6 +108,7 @@ public class MomentAdminController {
 	 */
 	@OperationLogger("更新动态")
 	@PutMapping("/moment")
+	@ApiOperation("更新动态")
 	public Result updateMoment(@RequestBody Moment moment) {
 		if (moment.getCreateTime() == null) {
 			moment.setCreateTime(new Date());

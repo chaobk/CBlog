@@ -31,7 +31,7 @@ public class MomentServiceImpl implements MomentService {
 
 	@Override
 	public List<Moment> getMomentList() {
-		return momentMapper.getMomentList();
+		return momentMapper.selectList(null);
 	}
 
 	@Override
@@ -56,43 +56,40 @@ public class MomentServiceImpl implements MomentService {
 		}
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateMomentPublishedById(Long momentId, Boolean published) {
-		if (momentMapper.updateMomentPublishedById(momentId, published) != 1) {
+		Moment moment = Moment.builder().id(momentId).published(published).build();
+		if (momentMapper.updateById(moment) != 1) {
 			throw new PersistenceException("操作失败");
 		}
 	}
 
 	@Override
 	public Moment getMomentById(Long id) {
-		Moment moment = momentMapper.getMomentById(id);
+		Moment moment = momentMapper.selectById(id);
 		if (moment == null) {
 			throw new NotFoundException("动态不存在");
 		}
 		return moment;
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void deleteMomentById(Long id) {
-		if (momentMapper.deleteMomentById(id) != 1) {
+		if (momentMapper.deleteById(id) != 1) {
 			throw new PersistenceException("删除失败");
 		}
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void saveMoment(Moment moment) {
-		if (momentMapper.saveMoment(moment) != 1) {
+		if (momentMapper.insert(moment) != 1) {
 			throw new PersistenceException("动态添加失败");
 		}
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateMoment(Moment moment) {
-		if (momentMapper.updateMoment(moment) != 1) {
+		if (momentMapper.updateById(moment) != 1) {
 			throw new PersistenceException("动态修改失败");
 		}
 	}

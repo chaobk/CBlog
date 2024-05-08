@@ -1,10 +1,5 @@
 package com.chaobk.service.impl;
 
-import org.quartz.CronTrigger;
-import org.quartz.Scheduler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.chaobk.entity.ScheduleJob;
 import com.chaobk.entity.ScheduleJobLog;
 import com.chaobk.exception.PersistenceException;
@@ -12,6 +7,11 @@ import com.chaobk.mapper.ScheduleJobLogMapper;
 import com.chaobk.mapper.ScheduleJobMapper;
 import com.chaobk.service.ScheduleJobService;
 import com.chaobk.util.quartz.ScheduleUtils;
+import lombok.RequiredArgsConstructor;
+import org.quartz.CronTrigger;
+import org.quartz.Scheduler;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -22,13 +22,11 @@ import java.util.List;
  * @Date: 2020-11-01
  */
 @Service
+@RequiredArgsConstructor
 public class ScheduleJobServiceImpl implements ScheduleJobService {
-	@Autowired
-	Scheduler scheduler;
-	@Autowired
-	ScheduleJobMapper schedulerJobMapper;
-	@Autowired
-	ScheduleJobLogMapper scheduleJobLogMapper;
+	private final Scheduler scheduler;
+	private final ScheduleJobMapper schedulerJobMapper;
+	private final ScheduleJobLogMapper scheduleJobLogMapper;
 
 	/**
 	 * 项目启动时，初始化定时器
@@ -49,13 +47,13 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 
 	@Override
 	public List<ScheduleJob> getJobList() {
-		return schedulerJobMapper.getJobList();
+		return schedulerJobMapper.selectList(null);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void saveJob(ScheduleJob scheduleJob) {
-		if (schedulerJobMapper.saveJob(scheduleJob) != 1) {
+		if (schedulerJobMapper.insert(scheduleJob) != 1) {
 			throw new PersistenceException("添加失败");
 		}
 		ScheduleUtils.createScheduleJob(scheduler, scheduleJob);

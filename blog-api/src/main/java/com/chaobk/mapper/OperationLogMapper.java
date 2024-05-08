@@ -1,8 +1,9 @@
 package com.chaobk.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.chaobk.entity.OperationLog;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-import com.chaobk.entity.OperationLog;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface OperationLogMapper {
+public interface OperationLogMapper extends BaseMapper<OperationLog> {
 	List<OperationLog> getOperationLogListByDate(String startDate, String endDate);
 
 	int saveOperationLog(OperationLog log);

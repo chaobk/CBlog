@@ -1,15 +1,16 @@
 package com.chaobk.service.impl;
 
-import com.chaobk.util.IpAddressUtils;
-import com.chaobk.util.UserAgentUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chaobk.entity.OperationLog;
 import com.chaobk.exception.PersistenceException;
 import com.chaobk.mapper.OperationLogMapper;
 import com.chaobk.model.dto.UserAgentDTO;
 import com.chaobk.service.OperationLogService;
+import com.chaobk.util.IpAddressUtils;
+import com.chaobk.util.UserAgentUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,15 +20,18 @@ import java.util.List;
  * @Date: 2020-11-30
  */
 @Service
+@RequiredArgsConstructor
 public class OperationLogServiceImpl implements OperationLogService {
-	@Autowired
-	OperationLogMapper operationLogMapper;
-	@Autowired
-    UserAgentUtils userAgentUtils;
+	private final OperationLogMapper operationLogMapper;
+    private final UserAgentUtils userAgentUtils;
 
 	@Override
 	public List<OperationLog> getOperationLogListByDate(String startDate, String endDate) {
-		return operationLogMapper.getOperationLogListByDate(startDate, endDate);
+		QueryWrapper<OperationLog> queryWrapper = new QueryWrapper<>();
+		if (startDate!= null && endDate!= null) {
+			queryWrapper.between("create_time", startDate, endDate);
+		}
+		return operationLogMapper.selectList(queryWrapper);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -43,10 +47,9 @@ public class OperationLogServiceImpl implements OperationLogService {
 		}
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void deleteOperationLogById(Long id) {
-		if (operationLogMapper.deleteOperationLogById(id) != 1) {
+		if (operationLogMapper.deleteById(id) != 1) {
 			throw new PersistenceException("删除日志失败");
 		}
 	}

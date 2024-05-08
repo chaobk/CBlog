@@ -1,10 +1,9 @@
 package com.chaobk.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.chaobk.entity.LoginLog;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-import com.chaobk.entity.LoginLog;
-
-import java.util.List;
 
 /**
  * @Description: 登录日志持久层接口
@@ -13,10 +12,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface LoginLogMapper {
-	List<LoginLog> getLoginLogListByDate(String startDate, String endDate);
+public interface LoginLogMapper extends BaseMapper<LoginLog> {
 
 	int saveLoginLog(LoginLog log);
-
-	int deleteLoginLogById(Long id);
 }

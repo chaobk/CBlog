@@ -1,10 +1,7 @@
 package com.chaobk.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 
@@ -17,6 +14,8 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
+@Builder
+@AllArgsConstructor
 public class Moment {
 	private Long id;
 	private String content;//动态内容
