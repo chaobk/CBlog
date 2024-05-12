@@ -176,6 +176,11 @@
             <version>2.1.0</version>
         </dependency>
 
+        <!-- 补充validation依赖，否则ValidatorUtils初始化报错 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
