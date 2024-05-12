@@ -1,8 +1,9 @@
 package com.chaobk.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.chaobk.entity.ScheduleJobLog;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-import com.chaobk.entity.ScheduleJobLog;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface ScheduleJobLogMapper {
+public interface ScheduleJobLogMapper extends BaseMapper<ScheduleJobLog> {
 	List<ScheduleJobLog> getJobLogListByDate(String startDate, String endDate);
 
 	int saveJobLog(ScheduleJobLog jobLog);

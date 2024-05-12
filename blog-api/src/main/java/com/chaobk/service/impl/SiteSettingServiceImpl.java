@@ -1,9 +1,5 @@
 package com.chaobk.service.impl;
 
-import com.chaobk.util.JacksonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.chaobk.constant.RedisKeyConstants;
 import com.chaobk.constant.SiteSettingConstants;
 import com.chaobk.entity.SiteSetting;
@@ -15,12 +11,12 @@ import com.chaobk.model.vo.Favorite;
 import com.chaobk.model.vo.Introduction;
 import com.chaobk.service.RedisService;
 import com.chaobk.service.SiteSettingService;
+import com.chaobk.util.JacksonUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,17 +26,16 @@ import java.util.regex.Pattern;
  * @Date: 2020-08-09
  */
 @Service
+@RequiredArgsConstructor
 public class SiteSettingServiceImpl implements SiteSettingService {
-	@Autowired
-	SiteSettingMapper siteSettingMapper;
-	@Autowired
-	RedisService redisService;
+	private final SiteSettingMapper siteSettingMapper;
+	private final RedisService redisService;
 
 	private static final Pattern PATTERN = Pattern.compile("\"(.*?)\"");
 
 	@Override
 	public Map<String, List<SiteSetting>> getList() {
-		List<SiteSetting> siteSettings = siteSettingMapper.getList();
+		List<SiteSetting> siteSettings = siteSettingMapper.selectList(null);
 		List<SiteSetting> type1 = new ArrayList<>();
 		List<SiteSetting> type2 = new ArrayList<>();
 		List<SiteSetting> type3 = new ArrayList<>();
@@ -173,19 +168,19 @@ public class SiteSettingServiceImpl implements SiteSettingService {
 	}
 
 	public void saveOneSiteSetting(SiteSetting siteSetting) {
-		if (siteSettingMapper.saveSiteSetting(siteSetting) != 1) {
+		if (siteSettingMapper.insert(siteSetting) != 1) {
 			throw new PersistenceException("配置添加失败");
 		}
 	}
 
 	public void updateOneSiteSetting(SiteSetting siteSetting) {
-		if (siteSettingMapper.updateSiteSetting(siteSetting) != 1) {
+		if (siteSettingMapper.updateById(siteSetting) != 1) {
 			throw new PersistenceException("配置修改失败");
 		}
 	}
 
 	public void deleteOneSiteSettingById(Integer id) {
-		if (siteSettingMapper.deleteSiteSettingById(id) != 1) {
+		if (siteSettingMapper.deleteById(id) != 1) {
 			throw new PersistenceException("配置删除失败");
 		}
 	}

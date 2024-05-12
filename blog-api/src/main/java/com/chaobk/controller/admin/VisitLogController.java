@@ -1,17 +1,15 @@
 package com.chaobk.controller.admin;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.chaobk.entity.VisitLog;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.VisitLogService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Description: 访问日志后台管理
@@ -20,9 +18,10 @@ import com.chaobk.service.VisitLogService;
  */
 @RestController
 @RequestMapping("/admin")
+@RequiredArgsConstructor
+@Api(tags = "VisitLogController - 访问日志后台管理")
 public class VisitLogController {
-	@Autowired
-	VisitLogService visitLogService;
+	private final VisitLogService visitLogService;
 
 	/**
 	 * 分页查询访问日志列表
@@ -34,6 +33,7 @@ public class VisitLogController {
 	 * @return
 	 */
 	@GetMapping("/visitLogs")
+	@ApiOperation("分页查询访问日志列表")
 	public Result visitLogs(@RequestParam(defaultValue = "") String uuid,
 	                        @RequestParam(defaultValue = "") String[] date,
 	                        @RequestParam(defaultValue = "1") Integer pageNum,

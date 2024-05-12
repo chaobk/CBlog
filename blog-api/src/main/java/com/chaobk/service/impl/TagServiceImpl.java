@@ -27,7 +27,7 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public List<Tag> getTagList() {
-		return tagMapper.selectList(new QueryWrapper<Tag>().orderByDesc("id"));
+		return tagMapper.selectList(null);
 	}
 
 	@Override
@@ -67,13 +67,13 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public Tag getTagByName(String name) {
-		return tagMapper.getTagByName(name);
+		return tagMapper.selectOne(new QueryWrapper<Tag>().eq("name", name));
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void deleteTagById(Long id) {
-		if (tagMapper.deleteTagById(id) != 1) {
+		if (tagMapper.deleteById(id) != 1) {
 			throw new PersistenceException("标签删除失败");
 		}
 		redisService.deleteCacheByKey(RedisKeyConstants.TAG_CLOUD_LIST);

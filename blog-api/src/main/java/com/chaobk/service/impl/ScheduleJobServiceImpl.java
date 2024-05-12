@@ -1,5 +1,7 @@
 package com.chaobk.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.chaobk.entity.ScheduleJob;
 import com.chaobk.entity.ScheduleJobLog;
 import com.chaobk.exception.PersistenceException;
@@ -62,7 +64,7 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateJob(ScheduleJob scheduleJob) {
-		if (schedulerJobMapper.updateJob(scheduleJob) != 1) {
+		if (schedulerJobMapper.updateById(scheduleJob) != 1) {
 			throw new PersistenceException("更新失败");
 		}
 		ScheduleUtils.updateScheduleJob(scheduler, scheduleJob);
@@ -72,14 +74,14 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	@Override
 	public void deleteJobById(Long jobId) {
 		ScheduleUtils.deleteScheduleJob(scheduler, jobId);
-		if (schedulerJobMapper.deleteJobById(jobId) != 1) {
+		if (schedulerJobMapper.deleteById(jobId) != 1) {
 			throw new PersistenceException("删除失败");
 		}
 	}
 
 	@Override
 	public void runJobById(Long jobId) {
-		ScheduleUtils.run(scheduler, schedulerJobMapper.getJobById(jobId));
+		ScheduleUtils.run(scheduler, schedulerJobMapper.selectById(jobId));
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -90,17 +92,23 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 		} else {
 			ScheduleUtils.pauseJob(scheduler, jobId);
 		}
-		if (schedulerJobMapper.updateJobStatusById(jobId, status) != 1) {
+		UpdateWrapper<ScheduleJob> updateWrapper = new UpdateWrapper<>();
+		updateWrapper.set("status", status);
+		updateWrapper.eq("job_id", jobId);
+		if (schedulerJobMapper.update(updateWrapper) != 1) {
 			throw new PersistenceException("修改失败");
 		}
 	}
 
 	@Override
 	public List<ScheduleJobLog> getJobLogListByDate(String startDate, String endDate) {
-		return scheduleJobLogMapper.getJobLogListByDate(startDate, endDate);
+		QueryWrapper<ScheduleJobLog> queryWrapper = new QueryWrapper<>();
+		if (startDate != null && endDate != null) {
+			queryWrapper.between("create_time", startDate, endDate);
+		}
+		return scheduleJobLogMapper.selectList(queryWrapper);
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void saveJobLog(ScheduleJobLog jobLog) {
 		if (scheduleJobLogMapper.saveJobLog(jobLog) != 1) {
@@ -108,10 +116,9 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 		}
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void deleteJobLogByLogId(Long logId) {
-		if (scheduleJobLogMapper.deleteJobLogByLogId(logId) != 1) {
+		if (scheduleJobLogMapper.deleteById(logId) != 1) {
 			throw new PersistenceException("日志删除失败");
 		}
 	}

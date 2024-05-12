@@ -1,6 +1,8 @@
 package com.chaobk.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chaobk.util.IpAddressUtils;
+import com.chaobk.util.StringUtils;
 import com.chaobk.util.UserAgentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,14 @@ public class VisitLogServiceImpl implements VisitLogService {
 
 	@Override
 	public List<VisitLog> getVisitLogListByUUIDAndDate(String uuid, String startDate, String endDate) {
-		return visitLogMapper.getVisitLogListByUUIDAndDate(uuid, startDate, endDate);
+		QueryWrapper<VisitLog> visitLogQueryWrapper = new QueryWrapper<>();
+		if (!StringUtils.isEmpty(uuid)) {
+			visitLogQueryWrapper.like("uuid", uuid);
+		}
+		if (startDate!= null && endDate!= null) {
+			visitLogQueryWrapper.between("create_time", startDate, endDate);
+		}
+		return visitLogMapper.selectList(visitLogQueryWrapper);
 	}
 
 	@Override
