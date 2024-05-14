@@ -1,9 +1,10 @@
 package com.chaobk.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.chaobk.entity.Visitor;
 import com.chaobk.model.dto.VisitLogUuidTime;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-import com.chaobk.entity.Visitor;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface VisitorMapper {
+public interface VisitorMapper extends BaseMapper<Visitor> {
 	List<Visitor> getVisitorListByDate(String startDate, String endDate);
 
 	List<String> getNewVisitorIpSourceByYesterday();

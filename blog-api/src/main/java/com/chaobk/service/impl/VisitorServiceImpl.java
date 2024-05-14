@@ -1,10 +1,5 @@
 package com.chaobk.service.impl;
 
-import com.chaobk.util.IpAddressUtils;
-import com.chaobk.util.UserAgentUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.chaobk.constant.RedisKeyConstants;
 import com.chaobk.entity.Visitor;
 import com.chaobk.exception.PersistenceException;
@@ -13,6 +8,11 @@ import com.chaobk.model.dto.UserAgentDTO;
 import com.chaobk.model.dto.VisitLogUuidTime;
 import com.chaobk.service.RedisService;
 import com.chaobk.service.VisitorService;
+import com.chaobk.util.IpAddressUtils;
+import com.chaobk.util.UserAgentUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,13 +22,11 @@ import java.util.List;
  * @Date: 2021-01-31
  */
 @Service
+@RequiredArgsConstructor
 public class VisitorServiceImpl implements VisitorService {
-	@Autowired
-	VisitorMapper visitorMapper;
-	@Autowired
-	RedisService redisService;
-	@Autowired
-    UserAgentUtils userAgentUtils;
+	private final VisitorMapper visitorMapper;
+	private final RedisService redisService;
+    private final UserAgentUtils userAgentUtils;
 
 	@Override
 	public List<Visitor> getVisitorListByDate(String startDate, String endDate) {
@@ -53,7 +51,7 @@ public class VisitorServiceImpl implements VisitorService {
 		visitor.setIpSource(ipSource);
 		visitor.setOs(userAgentDTO.getOs());
 		visitor.setBrowser(userAgentDTO.getBrowser());
-		if (visitorMapper.saveVisitor(visitor) != 1) {
+		if (visitorMapper.insert(visitor) != 1) {
 			throw new PersistenceException("访客添加失败");
 		}
 	}
@@ -69,7 +67,7 @@ public class VisitorServiceImpl implements VisitorService {
 	public void deleteVisitor(Long id, String uuid) {
 		//删除Redis中该访客的uuid
 		redisService.deleteValueBySet(RedisKeyConstants.IDENTIFICATION_SET, uuid);
-		if (visitorMapper.deleteVisitorById(id) != 1) {
+		if (visitorMapper.deleteById(id) != 1) {
 			throw new PersistenceException("删除访客失败");
 		}
 	}
