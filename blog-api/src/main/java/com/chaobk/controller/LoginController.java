@@ -6,8 +6,8 @@ import com.chaobk.model.dto.LoginInfo;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.UserService;
 import com.chaobk.util.JwtUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "LoginController - 前台登录")
+@Tag(name = "LoginController - 前台登录")
 public class LoginController {
 	private final UserService userService;
 
@@ -34,7 +34,7 @@ public class LoginController {
 	 * @return
 	 */
 	@PostMapping("/login")
-	@ApiOperation("登录接口，成功后签发博主身份Token")
+	@Operation(description ="登录接口，成功后签发博主身份Token")
 	public Result login(@RequestBody LoginInfo loginInfo) {
 		User user = userService.findUserByUsernameAndPassword(loginInfo.getUsername(), loginInfo.getPassword());
 		if (!"ROLE_admin".equals(user.getRole())) {

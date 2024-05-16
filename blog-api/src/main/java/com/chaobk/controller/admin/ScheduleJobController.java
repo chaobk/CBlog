@@ -8,8 +8,8 @@ import com.chaobk.service.ScheduleJobService;
 import com.chaobk.util.common.ValidatorUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +23,12 @@ import java.util.Date;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Api(tags = "定时任务动态管理")
+@Tag(name = "定时任务动态管理")
 public class ScheduleJobController {
 	private final ScheduleJobService scheduleJobService;
 
 	@GetMapping("/jobs")
-	@ApiOperation("分页查询定时任务列表")
+	@Operation(description ="分页查询定时任务列表")
 	public Result jobs(@RequestParam(defaultValue = "1") Integer pageNum,
 	                   @RequestParam(defaultValue = "10") Integer pageSize) {
 		PageHelper.startPage(pageNum, pageSize);
@@ -44,7 +44,7 @@ public class ScheduleJobController {
 	 */
 	@OperationLogger("新建定时任务")
 	@PostMapping("/job")
-	@ApiOperation("新建定时任务")
+	@Operation(description ="新建定时任务")
 	public Result saveJob(@RequestBody ScheduleJob scheduleJob) {
 		scheduleJob.setStatus(false);
 		scheduleJob.setCreateTime(new Date());
@@ -61,7 +61,7 @@ public class ScheduleJobController {
 	 */
 	@OperationLogger("修改定时任务")
 	@PutMapping("/job")
-	@ApiOperation("修改定时任务")
+	@Operation(description ="修改定时任务")
 	public Result updateJob(@RequestBody ScheduleJob scheduleJob) {
 		scheduleJob.setStatus(false);
 		ValidatorUtils.validateEntity(scheduleJob);
@@ -77,7 +77,7 @@ public class ScheduleJobController {
 	 */
 	@OperationLogger("删除定时任务")
 	@DeleteMapping("/job")
-	@ApiOperation("删除定时任务")
+	@Operation(description ="删除定时任务")
 	public Result deleteJob(@RequestParam Long jobId) {
 		scheduleJobService.deleteJobById(jobId);
 		return Result.ok("删除成功");
@@ -91,7 +91,7 @@ public class ScheduleJobController {
 	 */
 	@OperationLogger("立即执行定时任务")
 	@PostMapping("/job/run")
-	@ApiOperation("立即执行定时任务")
+	@Operation(description ="立即执行定时任务")
 	public Result runJob(@RequestParam Long jobId) {
 		scheduleJobService.runJobById(jobId);
 		return Result.ok("提交执行");
@@ -106,7 +106,7 @@ public class ScheduleJobController {
 	 */
 	@OperationLogger("更新任务状态")
 	@PutMapping("/job/status")
-	@ApiOperation("更新任务状态：暂停或恢复")
+	@Operation(description ="更新任务状态：暂停或恢复")
 	public Result updateJobStatus(@RequestParam Long jobId, @RequestParam Boolean status) {
 		scheduleJobService.updateJobStatusById(jobId, status);
 		return Result.ok("更新成功");
@@ -121,7 +121,7 @@ public class ScheduleJobController {
 	 * @return
 	 */
 	@GetMapping("/job/logs")
-	@ApiOperation("分页查询定时任务日志列表")
+	@Operation(description ="分页查询定时任务日志列表")
 	public Result logs(@RequestParam(defaultValue = "") String[] date,
 	                   @RequestParam(defaultValue = "1") Integer pageNum,
 	                   @RequestParam(defaultValue = "10") Integer pageSize) {

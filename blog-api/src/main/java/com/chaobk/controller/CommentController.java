@@ -15,9 +15,9 @@ import com.chaobk.util.StringUtils;
 import com.chaobk.util.comment.CommentUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +32,7 @@ import java.util.Map;
  */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "CommentController - 评论")
+@Tag(name = "CommentController - 评论")
 public class CommentController {
 	private final CommentService commentService;
     private final UserServiceImpl userService;
@@ -40,12 +40,12 @@ public class CommentController {
 
 
 	@GetMapping("/comments")
-	@ApiOperation("根据博客分页查询评论列表")
-	public Result comments(@ApiParam("页面分类（0普通文章，1关于我，2友联）") @RequestParam Integer page,
-						   @ApiParam("如果page==0，需要博客id参数") @RequestParam(defaultValue = "") Long blogId,
-                           @ApiParam("页码") @RequestParam(defaultValue = "1") Integer pageNum,
-                           @ApiParam("每页个数") @RequestParam(defaultValue = "10") Integer pageSize,
-                           @ApiParam("若文章受密码保护，需要获取访问Token") @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
+	@Operation(description ="根据博客分页查询评论列表")
+	public Result comments(@Parameter(description = "页面分类（0普通文章，1关于我，2友联）") @RequestParam Integer page,
+						   @Parameter(description = "如果page==0，需要博客id参数") @RequestParam(defaultValue = "") Long blogId,
+                           @Parameter(description = "页码") @RequestParam(defaultValue = "1") Integer pageNum,
+                           @Parameter(description = "每页个数") @RequestParam(defaultValue = "10") Integer pageSize,
+                           @Parameter(description = "若文章受密码保护，需要获取访问Token") @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
 		CommentOpenStateEnum openState = commentUtils.judgeCommentState(page, blogId);
 		switch (openState) {
 			case NOT_FOUND:
@@ -109,7 +109,7 @@ public class CommentController {
 	 */
 	@AccessLimit(seconds = 30, maxCount = 1, msg = "30秒内只能提交一次评论")
 	@PostMapping("/comment")
-	@ApiOperation("提交评论")
+	@Operation(description ="提交评论")
 	public Result postComment(@RequestBody Comment comment,
 	                          HttpServletRequest request,
 	                          @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {

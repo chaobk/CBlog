@@ -8,9 +8,9 @@ import com.chaobk.service.CategoryService;
 import com.chaobk.util.StringUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Api(tags = "CategoryAdminController - 博客分类后台管理")
+@Tag(name = "CategoryAdminController - 博客分类后台管理")
 public class CategoryAdminController {
 	private final BlogService blogService;
 	private final CategoryService categoryService;
 
 	@GetMapping("/categories")
-	@ApiOperation("/admin/categories - 获取博客分类列表")
+	@Operation(description ="/admin/categories - 获取博客分类列表")
 	public Result categories(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
 		String orderBy = "id desc";
 		PageHelper.startPage(pageNum, pageSize, orderBy);
@@ -38,7 +38,7 @@ public class CategoryAdminController {
 
 	@OperationLogger("添加分类")
 	@PostMapping("/category")
-	@ApiOperation("添加新分类")
+	@Operation(description ="添加新分类")
 	public Result saveCategory(@RequestBody Category category) {
 		return getResult(category, "save");
 	}
@@ -77,8 +77,8 @@ public class CategoryAdminController {
 
 	@OperationLogger("删除分类")
 	@DeleteMapping("/category")
-	@ApiOperation("删除分类")
-	public Result delete(@ApiParam("分类的id") @RequestParam Long id) {
+	@Operation(description ="删除分类")
+	public Result delete(@Parameter(description = "分类的id") @RequestParam Long id) {
 		//删除存在博客关联的分类后，该博客的查询会出异常
 		int num = blogService.countBlogByCategoryId(id);
 		if (num != 0) {

@@ -5,8 +5,8 @@ import com.chaobk.model.vo.Result;
 import com.chaobk.service.LoginLogService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Api(tags = "LoginLogController - 登录日志后台管理")
+@Tag(name = "LoginLogController - 登录日志后台管理")
 public class LoginLogController {
 	private final LoginLogService loginLogService;
 
@@ -31,7 +31,7 @@ public class LoginLogController {
 	 * @return
 	 */
 	@GetMapping("/loginLogs")
-	@ApiOperation("分页查询登录日志列表")
+	@Operation(description ="分页查询登录日志列表")
 	public Result loginLogs(@RequestParam(defaultValue = "") String[] date,
 	                        @RequestParam(defaultValue = "1") Integer pageNum,
 	                        @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -54,7 +54,7 @@ public class LoginLogController {
 	 * @return
 	 */
 	@DeleteMapping("/loginLog")
-	@ApiOperation("按id删除登录日志")
+	@Operation(description ="按id删除登录日志")
 	public Result delete(@RequestParam Long id) {
 		loginLogService.deleteLoginLogById(id);
 		return Result.ok("删除成功");

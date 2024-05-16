@@ -8,8 +8,7 @@ import com.chaobk.service.TagService;
 import com.chaobk.util.StringUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Api(tags = "TagAdminController - 博客标签后台管理")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "TagAdminController - 博客标签后台管理")
 public class TagAdminController {
 	private final BlogService blogService;
 	private final TagService tagService;
@@ -34,7 +33,7 @@ public class TagAdminController {
 	 * @return
 	 */
 	@GetMapping("/tags")
-	@ApiOperation("获取博客标签列表")
+	@Operation(description ="获取博客标签列表")
 	public Result tags(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
 		String orderBy = "id desc";
 		PageHelper.startPage(pageNum, pageSize, orderBy);
@@ -50,7 +49,7 @@ public class TagAdminController {
 	 */
 	@OperationLogger("添加标签")
 	@PostMapping("/tag")
-	@ApiOperation("添加新标签")
+	@Operation(description ="添加新标签")
 	public Result saveTag(@RequestBody Tag tag) {
 		return getResult(tag, "save");
 	}
@@ -101,7 +100,7 @@ public class TagAdminController {
 	 */
 	@OperationLogger("删除标签")
 	@DeleteMapping("/tag")
-	@ApiOperation("按id删除标签")
+	@Operation(description ="按id删除标签")
 	public Result delete(@RequestParam Long id) {
 		//删除存在博客关联的标签后，该博客的查询会出异常
 		int num = blogService.countBlogByTagId(id);

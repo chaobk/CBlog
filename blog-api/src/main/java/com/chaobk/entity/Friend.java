@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.Date;
@@ -22,29 +21,29 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @TableName("friend")
-@ApiModel("友链")
+@Schema(description = "友链")
 public class Friend {
 	@TableId(type = IdType.AUTO)
 	private Long id;
 	@TableField("nickname")
-	@ApiModelProperty(value = "昵称")
+	@Schema(description =  "昵称")
 	private String nickname;
 	@TableField("description")
-	@ApiModelProperty(value = "描述")
+	@Schema(description =  "描述")
 	private String description;
 	@TableField("website")
-	@ApiModelProperty(value = "站点")
+	@Schema(description =  "站点")
 	private String website;
 	@TableField("avatar")
-	@ApiModelProperty(value = "头像")
+	@Schema(description =  "头像")
 	private String avatar;
 	@TableField("is_published")
-	@ApiModelProperty(value = "是否公开")
+	@Schema(description =  "是否公开")
 	private Boolean published;
 	@TableField("views")
-	@ApiModelProperty(value = "浏览次数")
+	@Schema(description =  "浏览次数")
 	private Integer views;
 	@TableField("create_time")
-	@ApiModelProperty(value = "创建时间")
+	@Schema(description =  "创建时间")
 	private Date createTime;
 }

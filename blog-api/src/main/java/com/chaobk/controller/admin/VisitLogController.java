@@ -5,8 +5,8 @@ import com.chaobk.model.vo.Result;
 import com.chaobk.service.VisitLogService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Api(tags = "VisitLogController - 访问日志后台管理")
+@Tag(name = "VisitLogController - 访问日志后台管理")
 public class VisitLogController {
 	private final VisitLogService visitLogService;
 
@@ -33,7 +33,7 @@ public class VisitLogController {
 	 * @return
 	 */
 	@GetMapping("/visitLogs")
-	@ApiOperation("分页查询访问日志列表")
+	@Operation(description ="分页查询访问日志列表")
 	public Result visitLogs(@RequestParam(defaultValue = "") String uuid,
 	                        @RequestParam(defaultValue = "") String[] date,
 	                        @RequestParam(defaultValue = "1") Integer pageNum,

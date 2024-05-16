@@ -1,13 +1,13 @@
 package com.chaobk.model.dto;
 
-import io.swagger.annotations.ApiModel;
+import com.chaobk.entity.Category;
+import com.chaobk.entity.Tag;
+import com.chaobk.entity.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import com.chaobk.entity.Category;
-import com.chaobk.entity.Tag;
-import com.chaobk.entity.User;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +22,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@ApiModel(value = "博客对象")
+@Schema(description = "博客对象")
 public class Blog {
 	private Long id;
 	private String title;//文章标题

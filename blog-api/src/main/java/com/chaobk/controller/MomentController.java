@@ -12,9 +12,9 @@ import com.chaobk.service.MomentService;
 import com.chaobk.service.impl.UserServiceImpl;
 import com.chaobk.util.JwtUtils;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,16 +25,16 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "MomentController - 动态")
+@Tag(name = "MomentController - 动态")
 public class MomentController {
 	private final MomentService momentService;
     private final UserServiceImpl userService;
 
 	@VisitLogger(VisitBehavior.MOMENT)
 	@GetMapping("/moments")
-	@ApiOperation("分页查询动态")
-	public Result moments(@ApiParam("页码") @RequestParam(defaultValue = "1") Integer pageNum,
-                           @ApiParam("博主访问Token") @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
+	@Operation(description ="分页查询动态")
+	public Result moments(@Parameter(description = "页码") @RequestParam(defaultValue = "1") Integer pageNum,
+                           @Parameter(description = "博主访问Token") @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
 		boolean adminIdentity = false;
 		if (JwtUtils.judgeTokenIsExist(jwt)) {
 			try {
@@ -66,7 +66,7 @@ public class MomentController {
 	@AccessLimit(seconds = 86400, maxCount = 1, msg = "不可以重复点赞哦")
 	@VisitLogger(VisitBehavior.LIKE_MOMENT)
 	@PostMapping("/moment/like/{id}")
-	@ApiOperation("给动态点赞")
+	@Operation(description ="给动态点赞")
 	public Result like(@PathVariable Long id) {
 		momentService.addLikeByMomentId(id);
 		return Result.ok("点赞成功");

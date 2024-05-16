@@ -4,8 +4,8 @@ import com.chaobk.annotation.OperationLogger;
 import com.chaobk.entity.SiteSetting;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.SiteSettingService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Api(tags = "SiteSettingAdminController - 站点设置后台管理")
+@Tag(name = "SiteSettingAdminController - 站点设置后台管理")
 public class SiteSettingAdminController {
 	private final SiteSettingService siteSettingService;
 
@@ -31,7 +31,7 @@ public class SiteSettingAdminController {
 	 * @return
 	 */
 	@GetMapping("/siteSettings")
-	@ApiOperation("获取所有站点配置信息")
+	@Operation(description ="获取所有站点配置信息")
 	public Result siteSettings() {
 		Map<String, List<SiteSetting>> typeMap = siteSettingService.getList();
 		return Result.ok("请求成功", typeMap);

@@ -6,9 +6,9 @@ import com.chaobk.model.vo.Friend;
 import com.chaobk.model.vo.FriendInfo;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.FriendService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,14 +26,14 @@ import java.util.Map;
  */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "FriendController - 友链")
+@Tag(name = "FriendController - 友链")
 public class FriendController {
 	private final FriendService friendService;
 
 
 	@VisitLogger(VisitBehavior.FRIEND)
 	@GetMapping("/friends")
-	@ApiOperation("获取友联页面")
+	@Operation(description ="获取友联页面")
 	public Result friends() {
 		List<Friend> friendList = friendService.getFriendVOList();
 		FriendInfo friendInfo = friendService.getFriendInfo(true, true);
@@ -51,8 +51,8 @@ public class FriendController {
 	 */
 	@VisitLogger(VisitBehavior.CLICK_FRIEND)
 	@PostMapping("/friend")
-	@ApiOperation("按昵称增加友链浏览次数")
-	public Result addViews(@ApiParam("友链昵称") @RequestParam String nickname) {
+	@Operation(description ="按昵称增加友链浏览次数")
+	public Result addViews(@Parameter(description = "友链昵称") @RequestParam String nickname) {
 		friendService.updateViewsByNickname(nickname);
 		return Result.ok("请求成功");
 	}

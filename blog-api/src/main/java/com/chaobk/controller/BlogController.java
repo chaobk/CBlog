@@ -10,9 +10,9 @@ import com.chaobk.service.BlogService;
 import com.chaobk.service.impl.UserServiceImpl;
 import com.chaobk.util.JwtUtils;
 import com.chaobk.util.StringUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ import java.util.List;
  * @Date: 2020-08-12
  */
 @RestController
-@Api(tags = "BlogController - 博客相关")
+@Tag(name = "BlogController - 博客相关")
 @RequiredArgsConstructor
 public class BlogController {
 	private final BlogService blogService;
@@ -38,7 +38,7 @@ public class BlogController {
 	 */
 	@VisitLogger(VisitBehavior.INDEX)
 	@GetMapping("/blogs")
-	@ApiOperation("分页查询博客摘要信息列表， 按照置顶、创建时间排序")
+	@Operation(description ="分页查询博客摘要信息列表， 按照置顶、创建时间排序")
 	public Result blogs(@RequestParam(defaultValue = "1") Integer pageNum) {
 		PageResult<BlogInfo> pageResult = blogService.getBlogInfoListByIsPublished(pageNum);
 		return Result.ok("请求成功", pageResult);
@@ -46,9 +46,9 @@ public class BlogController {
 
 	@VisitLogger(VisitBehavior.BLOG)
 	@GetMapping("/blog")
-	@ApiOperation("按id获取公开博客详情")
-	public Result getBlog(@ApiParam("博客id") @RequestParam Long id,
-	                      @ApiParam("保护文章的访问Token") @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
+	@Operation(description ="按id获取公开博客详情")
+	public Result getBlog(@Parameter(description = "博客id") @RequestParam Long id,
+	                      @Parameter(description = "保护文章的访问Token") @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
 		BlogDetail blog = blogService.getBlogByIdAndIsPublished(id);
 		//对密码保护的文章校验Token
 		if (!"".equals(blog.getPassword())) {
@@ -86,7 +86,7 @@ public class BlogController {
 
 	@VisitLogger(VisitBehavior.CHECK_PASSWORD)
 	@PostMapping("/checkBlogPassword")
-	@ApiOperation("校验受保护文章密码是否正确，正确则返回jwt")
+	@Operation(description ="校验受保护文章密码是否正确，正确则返回jwt")
 	public Result checkBlogPassword(@RequestBody BlogPassword blogPassword) {
 		String password = blogService.getBlogPassword(blogPassword.getBlogId());
 		if (password.equals(blogPassword.getPassword())) {
@@ -101,8 +101,8 @@ public class BlogController {
 
 	@VisitLogger(VisitBehavior.SEARCH)
 	@GetMapping("/searchBlog")
-	@ApiOperation("按关键字搜索公开且无密码保护的博客文章")
-	public Result searchBlog(@ApiParam("搜索关键字") @RequestParam String query) {
+	@Operation(description ="按关键字搜索公开且无密码保护的博客文章")
+	public Result searchBlog(@Parameter(description = "搜索关键字") @RequestParam String query) {
 		//校验关键字字符串合法性
 		if (StringUtils.isEmpty(query) || StringUtils.hasSpecialChar(query) || query.trim().length() > 20) {
 			return Result.error("参数错误");

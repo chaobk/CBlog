@@ -5,7 +5,7 @@ import com.chaobk.entity.CityVisitor;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.DashboardService;
 import com.chaobk.service.RedisService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Api(tags = "后台管理仪表盘")
+@Tag(name = "后台管理仪表盘")
 public class DashboardAdminController {
 	private final DashboardService dashboardService;
 	private final RedisService redisService;

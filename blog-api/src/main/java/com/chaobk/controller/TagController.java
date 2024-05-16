@@ -6,9 +6,9 @@ import com.chaobk.model.vo.BlogInfo;
 import com.chaobk.model.vo.PageResult;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.BlogService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/tag")
-@Api(tags = "TagController - 标签")
+@Tag(name = "TagController - 标签")
 public class TagController {
 	private final BlogService blogService;
 
@@ -36,9 +36,9 @@ public class TagController {
 	 */
 	@VisitLogger(VisitBehavior.TAG)
 	@GetMapping
-	@ApiOperation("根据标签name分页查询公开博客列表")
-	public Result tag(@ApiParam("标签名") @RequestParam String tagName,
-                      @ApiParam("页码") @RequestParam(defaultValue = "1") Integer pageNum) {
+	@Operation(description ="根据标签name分页查询公开博客列表")
+	public Result tag(@Parameter(description = "标签名") @RequestParam String tagName,
+                      @Parameter(description = "页码") @RequestParam(defaultValue = "1") Integer pageNum) {
 		PageResult<BlogInfo> pageResult = blogService.getBlogInfoListByTagNameAndIsPublished(tagName, pageNum);
 		return Result.ok("请求成功", pageResult);
 	}

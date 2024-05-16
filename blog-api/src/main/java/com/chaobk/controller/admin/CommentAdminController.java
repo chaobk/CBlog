@@ -9,9 +9,9 @@ import com.chaobk.service.CommentService;
 import com.chaobk.util.StringUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Api(tags = "CommentAdminController - 博客评论后台管理")
+@Tag(name = "CommentAdminController - 博客评论后台管理")
 public class CommentAdminController {
 	private final CommentService commentService;
 	private final BlogService blogService;
@@ -40,7 +40,7 @@ public class CommentAdminController {
 	 * @return
 	 */
 	@GetMapping("/comments")
-	@ApiOperation("按页面和博客id分页查询评论List")
+	@Operation(description ="按页面和博客id分页查询评论List")
 	public Result comments(@RequestParam(defaultValue = "") Integer page,
 	                       @RequestParam(defaultValue = "") Long blogId,
 	                       @RequestParam(defaultValue = "1") Integer pageNum,
@@ -58,7 +58,7 @@ public class CommentAdminController {
 	 * @return
 	 */
 	@GetMapping("/blogIdAndTitle")
-	@ApiOperation("获取所有博客id和title 供评论分类的选择")
+	@Operation(description ="获取所有博客id和title 供评论分类的选择")
 	public Result blogIdAndTitle() {
 		List<Blog> blogs = blogService.getIdAndTitleList();
 		return Result.ok("请求成功", blogs);
@@ -73,8 +73,8 @@ public class CommentAdminController {
 	 */
 	@OperationLogger("更新评论公开状态")
 	@PutMapping("/comment/published")
-	@ApiOperation("更新评论公开状态")
-	public Result updatePublished(@ApiParam("评论id") @RequestParam Long id, @ApiParam("是否公开") @RequestParam Boolean published) {
+	@Operation(description ="更新评论公开状态")
+	public Result updatePublished(@Parameter(description = "评论id") @RequestParam Long id, @Parameter(description = "是否公开") @RequestParam Boolean published) {
 		commentService.updateCommentPublishedById(id, published);
 		return Result.ok("操作成功");
 	}
@@ -88,23 +88,24 @@ public class CommentAdminController {
 	 */
 	@OperationLogger("更新评论邮件提醒状态")
 	@PutMapping("/comment/notice")
-	@ApiOperation("更新评论邮件提醒状态")
-	public Result updateNotice(@ApiParam("评论id") @RequestParam Long id, @ApiParam("是否接收提醒") @RequestParam Boolean notice) {
+	@Operation(description ="更新评论邮件提醒状态")
+	public Result updateNotice(@Parameter(description = "评论id") @RequestParam Long id,
+							   @Parameter(description = "是否接收提醒") @RequestParam Boolean notice) {
 		commentService.updateCommentNoticeById(id, notice);
 		return Result.ok("操作成功");
 	}
 
 	@OperationLogger("删除评论")
 	@DeleteMapping("/comment")
-	@ApiOperation("按id删除该评论及其所有子评论")
-	public Result delete(@ApiParam("评论id") @RequestParam Long id) {
+	@Operation(description ="按id删除该评论及其所有子评论")
+	public Result delete(@Parameter(description = "评论id") @RequestParam Long id) {
 		commentService.deleteCommentById(id);
 		return Result.ok("删除成功");
 	}
 
 	@OperationLogger("修改评论")
 	@PutMapping("/comment")
-	@ApiOperation("修改评论")
+	@Operation(description ="修改评论")
 	public Result updateComment(@RequestBody Comment comment) {
 		if (StringUtils.isEmpty(comment.getNickname(), comment.getAvatar(), comment.getEmail(), comment.getIp(), comment.getContent())) {
 			return Result.error("参数有误");

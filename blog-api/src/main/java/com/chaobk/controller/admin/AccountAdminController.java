@@ -3,8 +3,8 @@ package com.chaobk.controller.admin;
 import com.chaobk.entity.User;
 import com.chaobk.model.vo.Result;
 import com.chaobk.service.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Api(tags = "AccountAdminController - 账号后台管理")
+@Tag(name = "AccountAdminController - 账号后台管理")
 public class AccountAdminController {
 	private final UserService userService;
 
@@ -24,7 +24,7 @@ public class AccountAdminController {
 	 * 账号密码修改
 	 */
 	@PostMapping("/account")
-	@ApiOperation("账号密码修改")
+	@Operation(description ="账号密码修改")
 	public Result account(@RequestBody User user, @RequestHeader(value = "Authorization", defaultValue = "") String jwt) {
 		boolean res = userService.changeAccount(user, jwt);
 		return res ? Result.ok("修改成功") : Result.error("修改失败");
